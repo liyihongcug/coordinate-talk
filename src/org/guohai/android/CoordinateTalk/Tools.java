@@ -1,14 +1,15 @@
 package org.guohai.android.CoordinateTalk;
 
+
 import android.app.Activity;
-import android.os.Bundle;
 import android.view.Display;
 
-public class Tools {
+public class Tools extends Activity{
 	
-	public static int GetResolution()
+	//get diskplay weight
+	public int GetResolutionWeight()
 	{
-		//Display dis = getWindowManager().getDefaultDisplay();
-		return 0;
+		Display dis = getWindowManager().getDefaultDisplay();
+		return dis.getWidth();
 	}
 }
