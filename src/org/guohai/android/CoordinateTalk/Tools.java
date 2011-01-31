@@ -6,7 +6,7 @@ import android.view.Display;
 
 public class Tools extends Activity{
 	
-	//get diskplay weight
+	//get diskplay weightd
 	public int GetResolutionWeight()
 	{
 		Display dis = getWindowManager().getDefaultDisplay();
