@@ -1,5 +1,5 @@
 /**
- * ´Ë³ÌĞòÎª¿ªÔ´³ÌĞò£¬×ñÑ­GPLv3°æ±¾·¢²¼£¬²¢ÊÜÆä±£»¤¡£
+ * æ­¤ç¨‹åºä¸ºå¼€æºç¨‹åºï¼Œéµå¾ªGPLv3ç‰ˆæœ¬å‘å¸ƒï¼Œå¹¶å—å…¶ä¿æŠ¤ã€‚
  * (GPLv3 http://www.gnu.org/licenses/gpl.html)
  * Copyright 2011 by H!Guo
  */
@@ -18,12 +18,12 @@ public class GPSUtilities {
 	public double Latitude;
 	public double Longitude;
 	
-	/** ¹¹Ôìº¯Êı */
+	/** æ„é€ å‡½æ•° */
 	public GPSUtilities(Context parm){
 		context = parm;
 	}
 	
-	/** ¼ì²éÉè±¸ÊÇ·ñ¿ªÆô */
+	/** æ£€æŸ¥è®¾å¤‡æ˜¯å¦å¼€å¯ */
 	public boolean openGPSSettings(){
 		LocationManager alm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 		if(alm.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)){
@@ -32,12 +32,12 @@ public class GPSUtilities {
 		return false;
 	}
 	
-	/** È¡×ø±ê */
+	/** å–åæ ‡ */
 	public boolean getLocation(){
-		//È¡Î»ÖÃ¹ÜÀí·şÎñ
+		//å–ä½ç½®ç®¡ç†æœåŠ¡
 		LocationManager locationManager;
 		locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
-		//²éÕÒ·şÎñĞÅÏ¢
+		//æŸ¥æ‰¾æœåŠ¡ä¿¡æ¯
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);
 		criteria.setAltitudeRequired(false);
