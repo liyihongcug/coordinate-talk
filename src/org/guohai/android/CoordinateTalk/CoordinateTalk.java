@@ -15,7 +15,7 @@ public class CoordinateTalk extends Activity {
         setContentView(R.layout.main);
         Tools a =new Tools();
         findViews();
-        textCoordinate.setText(a.GetResolutionWeight()+"");
+        textCoordinate.setText("xxx"+a.GetResolutionWeight());
     }
     
     private TextView textCoordinate;
