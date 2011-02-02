@@ -1,14 +1,15 @@
 /**
- * Copyright 2011 H!guo
+ * 此程序为开源程序，遵循GPLv3版本发布，并受其保护。
+ * (GPLv3 http://www.gnu.org/licenses/gpl.html)
+ * Copyright 2011 by H!Guo
  */
 package org.guohai.android.cta;
 
 import android.content.*;
 import android.provider.*;
-import android.app.Activity;
+import android.app.*;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.guohai.android.cta.bll.*;
 
@@ -21,6 +22,7 @@ public class CoordinateTalk extends Activity {
 
     private TextView textCoordinate;
     private GPSUtilities gps;
+    private boolean gpsIsOpen = false;
     
     /** Called when the activity is first created. */
     @Override
@@ -30,8 +32,13 @@ public class CoordinateTalk extends Activity {
         findViews();
         gps = new GPSUtilities(getApplicationContext());
         init();
-        if(gps.getLocation()){
-        	textCoordinate.setText("ά�ȣ�" +  gps.Latitude+ "\n����" + gps.Longitude);
+        if(gpsIsOpen){
+	        if(gps.getLocation()){
+	        	textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度" + gps.Longitude);
+	        }
+        }
+        else{
+        	textCoordinate.setText("不打开GPS设置，本程序的某些功能可能无法正常执行！");
         }
         	
     }
@@ -41,15 +48,28 @@ public class CoordinateTalk extends Activity {
     	textCoordinate = (TextView)findViewById(R.id.coordinate);
     }
     
-    /** ��ʼ�� */
+    /** 初始化 */
     private void init(){
-        if(gps.openGPSSettings()){
+        if(gps.GPSDeviceIsOpen()){
         	textCoordinate.setText("true");
+        	gpsIsOpen=true;
         }
         else{
-        	Toast.makeText(this, R.string.open_gps, Toast.LENGTH_SHORT).show();
-    		Intent intent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
-    		startActivityForResult(intent,0);
+        	new AlertDialog.Builder(CoordinateTalk.this)
+        		.setTitle(R.string.setting_gps_title)
+        		.setMessage(R.string.setting_gps_info)
+        		.setPositiveButton(R.string.gps_setting,
+        				new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+					    		Intent intent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
+					    		startActivityForResult(intent,0);
+							}
+						})
+				.setNegativeButton(R.string.jump_gps_setting, null)
+
+        		.show();
+
         }
     }
     

@@ -24,7 +24,7 @@ public class GPSUtilities {
 	}
 	
 	/** 检查设备是否开启 */
-	public boolean openGPSSettings(){
+	public boolean GPSDeviceIsOpen(){
 		LocationManager alm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 		if(alm.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)){
 			return true;
