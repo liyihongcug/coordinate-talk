@@ -7,7 +7,7 @@ package org.guohai.android.cta.bll;
 
 import android.content.*;
 import android.location.*;
-
+import android.os.*;
 /**
  * Get GPS Corrdinate 
  * @author H!Guo
@@ -15,8 +15,9 @@ import android.location.*;
 public class GPSUtilities {
 	
 	private Context context;
-	public double Latitude;
-	public double Longitude;
+	public double Latitude;//维度
+	public double Longitude;//经度
+	private LocationManager locationManager;
 	
 	/** 构造函数 */
 	public GPSUtilities(Context parm){
@@ -25,8 +26,8 @@ public class GPSUtilities {
 	
 	/** 检查设备是否开启 */
 	public boolean GPSDeviceIsOpen(){
-		LocationManager alm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-		if(alm.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)){
+		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+		if(locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)){
 			return true;
 		}
 		return false;
@@ -35,24 +36,35 @@ public class GPSUtilities {
 	/** 取坐标 */
 	public boolean getLocation(){
 		//取位置管理服务
-		LocationManager locationManager;
-		locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+		
+		//locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+		if(null == locationManager){
+			return false;
+		}
 		//查找服务信息
-		Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-		criteria.setAltitudeRequired(false);
-		criteria.setBearingRequired(false);
-		criteria.setCostAllowed(true);
-		criteria.setPowerRequirement(Criteria.POWER_LOW);
-		//try{
-			String provider = locationManager.getBestProvider(criteria, true);
-			Location location = locationManager.getLastKnownLocation(provider);
-			if(null != location){
-				Latitude = location.getLatitude();
-				Longitude= location.getLongitude();
-			}
-		//}
-			//locationManager.requestLocationUpdates(provider, 100*1000, 500, listener)
-			return true;
+
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+		return true;
 	}
+	
+	/** 实现GPS监听 */
+	public LocationListener mLocationListener = new LocationListener(){
+		/** GPS数据被更新 */
+		public void onLocationChanged(Location location){
+			Latitude = location.getLatitude();
+			Longitude = location.getLongitude();
+		}
+		
+		public void onProviderDisabled(String provider){
+			
+		}
+		
+		public void onProviderEnabled(String provider){
+			
+		}
+		
+		public void onStatusChanged(String provider,int status,Bundle extras){
+			
+		}
+	};
 }

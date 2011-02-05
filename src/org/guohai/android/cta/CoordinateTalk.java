@@ -9,7 +9,8 @@ import android.content.*;
 import android.provider.*;
 import android.app.*;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.widget.*;
+import android.view.*;
 
 import org.guohai.android.cta.bll.*;
 
@@ -21,8 +22,9 @@ import org.guohai.android.cta.bll.*;
 public class CoordinateTalk extends Activity {
 
     private TextView textCoordinate;
+    private Button btnTest;
     private GPSUtilities gps;
-    private boolean gpsIsOpen = false;
+    //private boolean gpsIsOpen = false;
     
     /** Called when the activity is first created. */
     @Override
@@ -32,27 +34,37 @@ public class CoordinateTalk extends Activity {
         findViews();
         gps = new GPSUtilities(getApplicationContext());
         init();
-        if(gpsIsOpen){
-	        if(gps.getLocation()){
-	        	textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度" + gps.Longitude);
-	        }
-        }
-        else{
-        	textCoordinate.setText("不打开GPS设置，本程序的某些功能可能无法正常执行！");
-        }
-        	
+          	
+    }
+    
+    @Override
+    protected void onResume(){
+    	super.onResume();
     }
     
     /** Find all views */
     private void findViews(){
     	textCoordinate = (TextView)findViewById(R.id.coordinate);
+    	btnTest = (Button)findViewById(R.id.button1);
+        btnTest.setOnClickListener(new Button.OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+        		textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度" + gps.Longitude);
+			}
+        });
     }
     
     /** 初始化 */
     private void init(){
         if(gps.GPSDeviceIsOpen()){
         	textCoordinate.setText("true");
-        	gpsIsOpen=true;
+        	//gpsIsOpen=true;
+	        if(gps.getLocation()){
+	        	textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度" + gps.Longitude);
+	        }
         }
         else{
         	new AlertDialog.Builder(CoordinateTalk.this)
@@ -70,6 +82,7 @@ public class CoordinateTalk extends Activity {
 
         		.show();
 
+        	textCoordinate.setText("不打开GPS设置，本程序的某些功能可能无法正常执行！");
         }
     }
     
