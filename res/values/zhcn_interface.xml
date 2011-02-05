@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="setting_gps_title">您的GPS设备没有开启</string>
-    <string name="setting_gps_info">请在位置设置中打开GPS和无线网络</string>
-</resources>
