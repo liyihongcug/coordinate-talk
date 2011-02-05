@@ -8,4 +8,9 @@
     <string name="setting_gps_title">your GPS devices not open</string>
     <string name="setting_gps_info">请在位置设置中打开GPS和无线网络</string>
     <string name="open_gps">ple open GPS devices</string>
+    
+    <string name="menu_config">Config</string>
+    <string name="menu_swapaccount">Swap account</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_Exit">Exit</string>
 </resources>

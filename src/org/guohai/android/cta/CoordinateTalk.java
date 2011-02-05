@@ -24,6 +24,11 @@ public class CoordinateTalk extends Activity {
     private TextView textCoordinate;
     private Button btnTest;
     private GPSUtilities gps;
+    private static final int MENU_CONFIG=0;
+    private static final int MENU_SWAP_ACCOUNT=1;
+    private static final int MENU_HELP=2;
+    private static final int MENU_EXIT=3;
+    
     //private boolean gpsIsOpen = false;
     
     /** Called when the activity is first created. */
@@ -37,9 +42,16 @@ public class CoordinateTalk extends Activity {
           	
     }
     
+    /** 当程序重新开始的时候 */
     @Override
     protected void onResume(){
     	super.onResume();
+    }
+    
+    /** 当程序暂停的时候 */
+    @Override
+    protected void onPause(){
+    	super.onPause();
     }
     
     /** Find all views */
@@ -47,7 +59,6 @@ public class CoordinateTalk extends Activity {
     	textCoordinate = (TextView)findViewById(R.id.coordinate);
     	btnTest = (Button)findViewById(R.id.button1);
         btnTest.setOnClickListener(new Button.OnClickListener(){
-
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -55,6 +66,20 @@ public class CoordinateTalk extends Activity {
         		textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度" + gps.Longitude);
 			}
         });
+    }
+    
+    /** 创建菜单 */
+    public boolean onCreateOptionsMenu(Menu menu){
+    	
+    	menu.add(0,MENU_CONFIG,0,R.string.menu_config)
+    		.setIcon(R.drawable.menu_sys_opt);
+    	menu.add(0,MENU_SWAP_ACCOUNT,0,R.string.menu_swapaccount)
+			.setIcon(R.drawable.menu_logout);
+    	menu.add(0,MENU_HELP,0,R.string.menu_help)
+			.setIcon(R.drawable.help_menu_icon);
+    	menu.add(0,MENU_EXIT,0,R.string.menu_Exit)
+			.setIcon(R.drawable.exit_menu_icon);
+		return true;
     }
     
     /** 初始化 */
