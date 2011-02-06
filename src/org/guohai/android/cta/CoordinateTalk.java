@@ -10,9 +10,11 @@ import android.provider.*;
 import android.app.*;
 import android.os.Bundle;
 import android.widget.*;
+import android.util.Log;
 import android.view.*;
 
 import org.guohai.android.cta.bll.*;
+import org.guohai.android.cta.model.MessageInfo;
 
 /**
  * Main views 
@@ -20,9 +22,11 @@ import org.guohai.android.cta.bll.*;
  *
  */
 public class CoordinateTalk extends Activity {
+	private static final String ACTIVITY_TAG="CoordinateTalk";
 
     private TextView textCoordinate;
     private Button btnTest;
+    private EditText editMessage;
     private GPSUtilities gps;
     private static final int MENU_CONFIG=0;
     private static final int MENU_SWAP_ACCOUNT=1;
@@ -46,24 +50,34 @@ public class CoordinateTalk extends Activity {
     @Override
     protected void onResume(){
     	super.onResume();
+    	gps.getLocation();
     }
     
     /** 当程序暂停的时候 */
     @Override
     protected void onPause(){
     	super.onPause();
+    	gps.pauseGetLocation();
     }
     
     /** Find all views */
     private void findViews(){
     	textCoordinate = (TextView)findViewById(R.id.coordinate);
+    	editMessage = (EditText) findViewById(R.id.editText1);
     	btnTest = (Button)findViewById(R.id.button1);
         btnTest.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-
+				Log.v(ACTIVITY_TAG, "维");
         		textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度" + gps.Longitude);
+	    		HttpRest httpRest = new HttpRest();
+	    		MessageInfo message =new MessageInfo();
+	    		message.Latitude = gps.Latitude;
+	    		message.Longitude = gps.Longitude;
+	    		message.Note = editMessage.getText().toString();
+	    		message.SendAccount=Tools.GetPhoneImei(getApplicationContext());
+	    		textCoordinate.setText( httpRest.AddMessage(message));
 			}
         });
     }
@@ -101,6 +115,8 @@ public class CoordinateTalk extends Activity {
 							public void onClick(DialogInterface dialog, int which) {
 					    		Intent intent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
 					    		startActivityForResult(intent,0);
+					    		
+
 							}
 						})
 				.setNegativeButton(R.string.jump_gps_setting, null)

@@ -33,7 +33,7 @@ public class GPSUtilities {
 		return false;
 	}
 	
-	/** 取坐标 */
+	/** 开始监听 */
 	public boolean getLocation(){
 		//取位置管理服务
 		
@@ -45,6 +45,13 @@ public class GPSUtilities {
 
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
 		return true;
+	}
+	
+	/** 暂停监听卫星坐标 */
+	public void pauseGetLocation(){
+		if(null != locationManager){
+			locationManager.removeUpdates(mLocationListener);
+		}
 	}
 	
 	/** 实现GPS监听 */

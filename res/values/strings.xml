@@ -13,4 +13,6 @@
     <string name="menu_swapaccount">Swap account</string>
     <string name="menu_help">Help</string>
     <string name="menu_Exit">Exit</string>
+    
+    <string name="datapost_uri">http://android.guohai.org/api/cta.php</string>
 </resources>
