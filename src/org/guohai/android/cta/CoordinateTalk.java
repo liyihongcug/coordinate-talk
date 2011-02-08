@@ -31,7 +31,6 @@ public class CoordinateTalk extends Activity {
     private EditText editMessage;
     private GPSUtilities gps;
     private static final int MENU_CONFIG=0;
-    private static final int MENU_SWAP_ACCOUNT=1;
     private static final int MENU_HELP=2;
     private static final int MENU_EXIT=3;
     
