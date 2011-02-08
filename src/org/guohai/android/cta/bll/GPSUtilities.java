@@ -17,6 +17,7 @@ public class GPSUtilities {
 	private Context context;
 	public double Latitude;//维度
 	public double Longitude;//经度
+	public double Altitude;//
 	private LocationManager locationManager;
 	
 	/** 构造函数 */
@@ -60,6 +61,7 @@ public class GPSUtilities {
 		public void onLocationChanged(Location location){
 			Latitude = location.getLatitude();
 			Longitude = location.getLongitude();
+			Altitude= location.getAltitude();
 		}
 		
 		public void onProviderDisabled(String provider){
