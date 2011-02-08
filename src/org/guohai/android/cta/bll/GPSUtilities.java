@@ -10,7 +10,7 @@ import android.location.*;
 import android.os.*;
 /**
  * Get GPS Corrdinate 
- * @author H!Guo
+ * @author H!Guo 
  */
 public class GPSUtilities {
 	

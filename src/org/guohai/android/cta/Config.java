@@ -10,7 +10,7 @@ import android.os.Bundle;
 
 /**
  * 配置页
- * @author H!Guo
+ * @author H!Guo 
  *
  */
 public class Config extends Activity  {

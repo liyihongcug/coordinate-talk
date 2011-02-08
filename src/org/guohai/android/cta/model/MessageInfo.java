@@ -7,7 +7,7 @@ package org.guohai.android.cta.model;
 
 /**
  * Message info 
- * @author H!Guo
+ * @author H!Guo 
  */
 public class MessageInfo {
 	public int Code;//编号

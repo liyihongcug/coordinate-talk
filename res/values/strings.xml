@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, CoordinateTalk!</string>
     <string name="app_name">CoordinateTalk</string>
     <string name="data_file_name">coordinate_talk</string>
     <string name="gps_setting">setup</string>

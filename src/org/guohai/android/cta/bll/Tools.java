@@ -10,7 +10,7 @@ import android.telephony.TelephonyManager;
 
 /**
  * small tools 
- * @author H!Guo
+ * @author H!Guo 
  */
 public class Tools {
 	/** Get phone imei */

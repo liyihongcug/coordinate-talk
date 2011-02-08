@@ -25,7 +25,7 @@ import org.guohai.android.cta.model.MessageInfo;
 
 /**
  * Http Post 
- * @author H!Guo
+ * @author H!Guo 
  */
 public class HttpRest {
 

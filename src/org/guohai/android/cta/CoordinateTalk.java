@@ -18,7 +18,7 @@ import org.guohai.android.cta.model.MessageInfo;
 
 /**
  * Main views 
- * @author H!Guo
+ * @author H!Guo 
  *
  */
 public class CoordinateTalk extends Activity {
