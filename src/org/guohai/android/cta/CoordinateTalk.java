@@ -9,6 +9,9 @@ import android.content.*;
 import android.provider.*;
 import android.app.*;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.widget.*;
 import android.util.Log;
 import android.view.*;
@@ -33,6 +36,9 @@ public class CoordinateTalk extends Activity {
     private static final int MENU_HELP=2;
     private static final int MENU_EXIT=3;
     
+    private Handler mMainHandler,mChildHandler;
+    private static boolean theanState=false;
+    
     //private boolean gpsIsOpen = false;
     
     /** Called when the activity is first created. */
@@ -42,8 +48,14 @@ public class CoordinateTalk extends Activity {
         setContentView(R.layout.main);
         findViews();
         gps = new GPSUtilities(getApplicationContext());
-        init();
+        inita();
           	
+    }
+    
+    public void onDestory(){
+    	super.onDestroy();
+    	//mChildHandler.getLooper().quit();
+    	theanState=false;
     }
     
     /** 当程序重新开始的时候 */
@@ -77,7 +89,10 @@ public class CoordinateTalk extends Activity {
 	    		message.Longitude = gps.Longitude;
 	    		message.Note = editMessage.getText().toString();
 	    		message.SendAccount=Tools.GetPhoneImei(getApplicationContext());
-	    		textCoordinate.setText( httpRest.AddMessage(message));
+	    		if("200"==httpRest.AddMessage(message)){
+	    			Toast.makeText(CoordinateTalk.this, "发送成功", Toast.LENGTH_SHORT).show();
+	    		}
+	    		//textCoordinate.setText( httpRest.AddMessage(message));
 			}
         });
     }
@@ -97,12 +112,22 @@ public class CoordinateTalk extends Activity {
     }
     
     /** 初始化 */
-    private void init(){
+    private void inita(){
+    	//接收子线程消息
+    	mMainHandler = new Handler(){
+    		@Override
+    		public void handleMessage(Message msg){
+    			textCoordinate.setText((String)msg.obj);
+    		}
+    	};
+    	
         if(gps.GPSDeviceIsOpen()){
-        	textCoordinate.setText("true");
+        	//textCoordinate.setText("true");
         	//gpsIsOpen=true;
 	        if(gps.getLocation()){
-	        	textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度" + gps.Longitude);
+	        	//textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度" + gps.Longitude);
+	        	theanState = true;
+	        	new ChildThread().start();
 	        }
         }
         else{
@@ -127,4 +152,21 @@ public class CoordinateTalk extends Activity {
         }
     }
     
+    class ChildThread extends Thread{
+    	public void run(){
+    		Log.i(ACTIVITY_TAG,"Thread ChildThread run!");
+    		while(theanState){
+
+    			try {
+        			Message toMain = mMainHandler.obtainMessage();
+        			toMain.obj = gps.Latitude+"\n"+"\n"+gps.Longitude;
+        			mMainHandler.sendMessage(toMain);
+					sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
+    	}
+    }
 }
