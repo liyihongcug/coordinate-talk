@@ -20,7 +20,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
-import org.guohai.android.cta.R;
 import org.guohai.android.cta.model.MessageInfo;
 
 /**
@@ -42,6 +41,7 @@ public class HttpRest {
 		dataList.add(new BasicNameValuePair("SendAccount",message.SendAccount));
 		dataList.add(new BasicNameValuePair("Latitude", Double.toString(message.Latitude)));
 		dataList.add(new BasicNameValuePair("Longitude",Double.toString(message.Longitude)));
+		dataList.add(new BasicNameValuePair("Altitude",Double.toString(message.Altitude)));
 		HttpEntity entity;
 		try {
 			entity = new UrlEncodedFormEntity(dataList,HTTP.UTF_8);

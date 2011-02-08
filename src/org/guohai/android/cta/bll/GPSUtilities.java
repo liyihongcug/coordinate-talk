@@ -8,6 +8,7 @@ package org.guohai.android.cta.bll;
 import android.content.*;
 import android.location.*;
 import android.os.*;
+import android.util.Log;
 /**
  * Get GPS Corrdinate 
  * @author H!Guo 
@@ -73,7 +74,11 @@ public class GPSUtilities {
 		}
 		
 		public void onStatusChanged(String provider,int status,Bundle extras){
-			
+			switch(status){
+			case LocationProvider.AVAILABLE:
+				Log.d("GPS","AVAILABLE");
+				break;
+			}
 		}
 	};
 }

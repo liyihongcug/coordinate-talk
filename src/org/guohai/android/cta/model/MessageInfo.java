@@ -15,4 +15,5 @@ public class MessageInfo {
 	public String SendAccount;//发送人
 	public double Latitude;//维度
 	public double Longitude; //经度
+	public double Altitude; //高度
 }
