@@ -8,8 +8,6 @@ package org.guohai.android.cta.model;
  * Message info 
  * @author H!Guo 
  */
-public class ParseGpsInfo {
+public class ParseGpsInfo extends LocationInfo {
 	public String SendAccount;//发送人
-	public double Latitude;//维度
-	public double Longitude; //经度
 }

@@ -25,9 +25,10 @@ import org.guohai.android.cta.model.ParseGpsInfo;
  *
  */
 public class CoordinateTalk extends Activity {
-	private static final String ACTIVITY_TAG="CoordinateTalk";
+	private static final String TAG="CoordinateTalk";
 
     private TextView textCoordinate;
+    private Button btnRefer;
     private Button btnTest;
     private EditText editMessage;
     private Button btnWhere;
@@ -80,11 +81,19 @@ public class CoordinateTalk extends Activity {
     	textCoordinate = (TextView)findViewById(R.id.coordinate);
     	textAddress = (TextView)findViewById(R.id.my_address);
     	editMessage = (EditText) findViewById(R.id.editText1);
-    	btnTest = (Button)findViewById(R.id.button1);
+    	btnRefer = (Button)findViewById(R.id.button_refer);
     	btnWhere = (Button)findViewById(R.id.where_am_i);
-    	
-    	btnWhere.setOnClickListener(new Button.OnClickListener(){
+    	btnTest = (Button)findViewById(R.id.button_test);
+    	btnTest.setOnClickListener(new Button.OnClickListener(){
 
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				gps.CellularPhone();
+			}
+    		
+    	});
+    	btnWhere.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -103,11 +112,11 @@ public class CoordinateTalk extends Activity {
     		
     	});
     	
-        btnTest.setOnClickListener(new Button.OnClickListener(){
+    	btnRefer.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Log.v(ACTIVITY_TAG, "维");
+				Log.v(TAG, "维");
 	    		HttpRest httpRest = new HttpRest();
 	    		MessageInfo message =new MessageInfo();
 	    		message.Altitude = gps.Altitude;
@@ -124,9 +133,9 @@ public class CoordinateTalk extends Activity {
 	    			return ;
 				}
 	    		String Result = httpRest.AddMessage(message);
-	    		Log.i(ACTIVITY_TAG,"["+Result+"]");
+	    		Log.i(TAG,"["+Result+"]");
 	    		if(Result.equals("200")){
-	    			Log.i(ACTIVITY_TAG,Result+"1111");
+	    			Log.i(TAG,Result+"1111");
 	    			Toast.makeText(CoordinateTalk.this, "发送成功", Toast.LENGTH_SHORT).show();
 	    			editMessage.setText("");
 	    		}
@@ -216,7 +225,7 @@ public class CoordinateTalk extends Activity {
     
     class ChildThread extends Thread{
     	public void run(){
-    		Log.i(ACTIVITY_TAG,"Thread ChildThread run!");
+    		Log.i(TAG,"Thread ChildThread run!");
     		while(theanState){
 
     			try {

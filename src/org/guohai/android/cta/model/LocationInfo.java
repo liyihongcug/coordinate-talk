@@ -4,13 +4,12 @@
  * Copyright 2011 by H!Guo
  */
 package org.guohai.android.cta.model;
-
 /**
  * Message info 
  * @author H!Guo 
  */
-public class MessageInfo extends LocationInfo {
-	public int Code;//编号
-	public String Note;//信息内容
-	public String SendAccount;//发送人
+public class LocationInfo {
+	public double Latitude;//维度
+	public double Longitude; //经度
+	public double Altitude; //高度
 }

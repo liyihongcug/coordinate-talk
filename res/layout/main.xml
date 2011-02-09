@@ -11,7 +11,7 @@
 	android:id="@+id/editText1"/>
 <Button
 	android:text="提交"
-	android:id="@+id/button1"
+	android:id="@+id/button_refer"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"/>
 <TextView  
@@ -27,4 +27,10 @@
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
     android:id="@+id/my_address"/>
+    
+<Button
+	android:text="测试用"
+	android:id="@+id/button_test"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"/>
 </LinearLayout>
