@@ -17,6 +17,7 @@ import android.view.*;
 
 import org.guohai.android.cta.bll.*;
 import org.guohai.android.cta.model.MessageInfo;
+import org.guohai.android.cta.model.ParseGpsInfo;
 
 /**
  * Main views 
@@ -29,6 +30,8 @@ public class CoordinateTalk extends Activity {
     private TextView textCoordinate;
     private Button btnTest;
     private EditText editMessage;
+    private Button btnWhere;
+    private TextView textAddress;
     private GPSUtilities gps;
     private static final int MENU_CONFIG=0;
     private static final int MENU_HELP=2;
@@ -75,8 +78,31 @@ public class CoordinateTalk extends Activity {
     /** Find all views */
     private void findViews(){
     	textCoordinate = (TextView)findViewById(R.id.coordinate);
+    	textAddress = (TextView)findViewById(R.id.my_address);
     	editMessage = (EditText) findViewById(R.id.editText1);
     	btnTest = (Button)findViewById(R.id.button1);
+    	btnWhere = (Button)findViewById(R.id.where_am_i);
+    	
+    	btnWhere.setOnClickListener(new Button.OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				HttpRest httpRest = new HttpRest();
+				ParseGpsInfo parseInfo = new ParseGpsInfo();
+				parseInfo.Latitude = gps.Latitude;
+				parseInfo.Longitude = gps.Longitude;
+				parseInfo.SendAccount = Tools.GetPhoneImei(getApplicationContext());
+				if(parseInfo.Latitude==0 || parseInfo.Longitude==0){
+	    			Toast.makeText(CoordinateTalk.this, "定位中..", Toast.LENGTH_SHORT).show();
+	    			return ;
+				}
+				String Result = httpRest.GetParse(parseInfo);
+				textAddress.setText(Result);
+			}
+    		
+    	});
+    	
         btnTest.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
@@ -93,6 +119,10 @@ public class CoordinateTalk extends Activity {
 	    			return ;
 	    		}
 	    		message.SendAccount=Tools.GetPhoneImei(getApplicationContext());
+				if(message.Latitude==0 || message.Longitude==0){
+	    			Toast.makeText(CoordinateTalk.this, "定位中..", Toast.LENGTH_SHORT).show();
+	    			return ;
+				}
 	    		String Result = httpRest.AddMessage(message);
 	    		Log.i(ACTIVITY_TAG,"["+Result+"]");
 	    		if(Result.equals("200")){
