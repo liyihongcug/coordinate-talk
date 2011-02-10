@@ -13,4 +13,7 @@ public class GsmCellLocationInfo {
 	public int LocationAreaCode=0;
 	public int MobileCountryCode=0;
 	public int MobileNetworkCode=0;
+	
+	public int NbCellId=0;
+	public int NbLocationAreaCode=0;
 }

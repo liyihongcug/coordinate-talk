@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import android.content.*;
 import android.location.*;
 import android.os.*;
+import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
@@ -113,10 +114,14 @@ public class GPSUtilities {
 		GsmCellLocation gcl = (GsmCellLocation) tm.getCellLocation();
 		GsmCellLocationInfo gcli = new GsmCellLocationInfo();
 		
-		gcli.CellId=gcl.getCid();
-		gcli.LocationAreaCode= gcl.getLac();
-		gcli.MobileCountryCode = Integer.valueOf(tm.getNetworkOperator().substring(0, 3));
-		gcli.MobileNetworkCode = Integer.valueOf(tm.getNetworkOperator().substring(3, 5));
+		gcli.CellId=gcl.getCid();//取小区号 
+		gcli.LocationAreaCode= gcl.getLac();//取LAC
+		gcli.MobileCountryCode = Integer.valueOf(tm.getNetworkOperator().substring(0, 3));//取国家代码
+		gcli.MobileNetworkCode = Integer.valueOf(tm.getNetworkOperator().substring(3, 5));//取运营商
+		
+		NeighboringCellInfo nbinfo = new NeighboringCellInfo();
+		gcli.NbCellId = nbinfo.getCid();//取邻居小区号
+		gcli.NbLocationAreaCode = nbinfo.getLac();//取邻居LAC
 		
 		Log.i(TAG,"call_id="+gcli.CellId+",location_area_code="+gcli.LocationAreaCode+",mobile_country_code="+gcli.MobileCountryCode+",mobile_network_code="+gcli.MobileNetworkCode);
 		HttpRest httpRest = new HttpRest();
