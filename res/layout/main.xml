@@ -29,7 +29,7 @@
     android:id="@+id/my_address"/>
     
 <Button
-	android:text="测试用"
+	android:text="测试-通过基站解析坐标"
 	android:id="@+id/button_test"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"/>

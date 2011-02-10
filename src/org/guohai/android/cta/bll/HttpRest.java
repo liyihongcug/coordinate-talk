@@ -22,14 +22,20 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
+import org.guohai.android.cta.model.GsmCellLocationInfo;
+import org.guohai.android.cta.model.LocationInfo;
 import org.guohai.android.cta.model.MessageInfo;
 import org.guohai.android.cta.model.ParseGpsInfo;
+
+import android.content.Context;
+import android.util.Log;
 
 /**
  * Http Post 
  * @author H!Guo 
  */
 public class HttpRest {
+	private static final String TAG="CoordinateTalk";
 
 	/** 反向解析 地址  */
 	public String GetParse(ParseGpsInfo parm){
@@ -82,6 +88,69 @@ public class HttpRest {
 		return "失败了over";
 	}
 	
+	/**
+	 * POST数据
+	 * @param parm
+	 * @return
+	 */
+	public LocationInfo FromGSMGetLocation(GsmCellLocationInfo parm,Context context){
+		LocationInfo location = new LocationInfo();
+		
+		//create http client
+		HttpClient client = new DefaultHttpClient();
+		//create post request
+		HttpPost httpPost = new HttpPost("http://android.guohai.org/api/?fun=gsm");
+		Log.i(TAG,"call_id="+parm.CellId+",location_area_code="+parm.LocationAreaCode+",mobile_country_code="+parm.MobileCountryCode+",mobile_network_code="+parm.MobileNetworkCode);
+		List <NameValuePair> dataList = new ArrayList <NameValuePair>();
+		dataList.add(new BasicNameValuePair("cid",Integer.toString(parm.CellId)));
+		dataList.add(new BasicNameValuePair("lac", Integer.toString(parm.LocationAreaCode)));
+		dataList.add(new BasicNameValuePair("mcc",Integer.toString(parm.MobileCountryCode)));
+		dataList.add(new BasicNameValuePair("mnc",Integer.toString(parm.MobileNetworkCode)));
+		dataList.add(new BasicNameValuePair("imei",""));
+		HttpEntity entity;
+		try {
+			entity = new UrlEncodedFormEntity(dataList,HTTP.UTF_8);
+			
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return location;
+		}
+		httpPost.setEntity(entity);
+		//向服务器POST数据 
+		try {
+			HttpResponse response = client.execute(httpPost);
+			if(response.getStatusLine().getStatusCode()==200){
+				HttpEntity entityHtml = response.getEntity();
+				BufferedReader  reader = new BufferedReader(new InputStreamReader(entityHtml.getContent(),"UTF-8"));
+				String line = null;
+				String reString = "";
+				while((line = reader.readLine())!=null){
+					reString += line;
+				}
+				if(entityHtml!=null){
+					entityHtml.consumeContent();
+				}
+				Log.i(TAG,reString);
+				String[] sArray = reString.split(",");
+				location.Latitude = Double.parseDouble(sArray[0]);
+				location.Longitude = Double.parseDouble(sArray[1]);
+				return location;
+			}
+			
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		}
+		return location;
+	}
+	
+	
 	/** 增加一   */
 	public String AddMessage(MessageInfo message)
 	{
@@ -122,4 +191,5 @@ public class HttpRest {
 		}
 		return "失败了over";
 	}
+	
 }
