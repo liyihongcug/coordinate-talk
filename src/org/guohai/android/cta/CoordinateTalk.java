@@ -5,6 +5,8 @@
  */
 package org.guohai.android.cta;
 
+import java.util.List;
+
 import android.content.*;
 import android.provider.*;
 import android.app.*;
@@ -12,6 +14,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.*;
+import android.telephony.NeighboringCellInfo;
+import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 import android.view.*;
 
@@ -90,6 +95,15 @@ public class CoordinateTalk extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				//gps.CellularPhone();
+				TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+				GsmCellLocation gcl = (GsmCellLocation) tm.getCellLocation();
+				String a=gcl.getCid()+","+gcl.getLac()+"|";
+				List<NeighboringCellInfo> listNbInfo = tm.getNeighboringCellInfo();
+				int count=listNbInfo.size();
+				for(int i=0;i<count;i++){
+					a+= listNbInfo.get(i).getCid()+","+listNbInfo.get(i).getLac()+","+listNbInfo.get(i).getRssi()+"|";//取邻居小区号
+				}
+				Toast.makeText(CoordinateTalk.this, a, Toast.LENGTH_LONG).show();
 			}
     		
     	});
