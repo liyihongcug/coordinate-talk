@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.*;
 
 import org.guohai.android.cta.bll.*;
-import org.guohai.android.cta.model.LocationInfo;
 import org.guohai.android.cta.model.MessageInfo;
 import org.guohai.android.cta.model.ParseGpsInfo;
 
