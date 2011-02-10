@@ -20,6 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 */
+import java.util.List;
+
 import android.content.*;
 import android.location.*;
 import android.os.*;
@@ -83,8 +85,8 @@ public class GPSUtilities {
 	public LocationListener mLocationListener = new LocationListener(){
 		/** GPS数据被更新 */
 		public void onLocationChanged(Location location){
-			Latitude = location.getLatitude();
-			Longitude = location.getLongitude();
+			Latitude = location.getLatitude()==0?Latitude:location.getLatitude();
+			Longitude = location.getLongitude()==0?Longitude:location.getLongitude();
 			Altitude= location.getAltitude();
 		}
 		
@@ -119,16 +121,18 @@ public class GPSUtilities {
 		gcli.MobileCountryCode = Integer.valueOf(tm.getNetworkOperator().substring(0, 3));//取国家代码
 		gcli.MobileNetworkCode = Integer.valueOf(tm.getNetworkOperator().substring(3, 5));//取运营商
 		
-		NeighboringCellInfo nbinfo = new NeighboringCellInfo();
-		gcli.NbCellId = nbinfo.getCid();//取邻居小区号
-		gcli.NbLocationAreaCode = nbinfo.getLac();//取邻居LAC
-		
+		List<NeighboringCellInfo> listNbInfo = tm.getNeighboringCellInfo();
+		if(listNbInfo.size()>0){
+			gcli.NbCellId = listNbInfo.get(0).getCid();//取邻居小区号
+			gcli.NbLocationAreaCode = listNbInfo.get(0).getLac();//取邻居LAC
+		}
 		Log.i(TAG,"call_id="+gcli.CellId+",location_area_code="+gcli.LocationAreaCode+",mobile_country_code="+gcli.MobileCountryCode+",mobile_network_code="+gcli.MobileNetworkCode);
 		HttpRest httpRest = new HttpRest();
 
 		location = httpRest.FromGSMGetLocation(gcli, context);
-		Toast.makeText(context, "Latitude:"+location.Latitude+",Longitude:"+location.Longitude, Toast.LENGTH_SHORT).show();
-		
+		//Toast.makeText(context, "Latitude:"+location.Latitude+",Longitude:"+location.Longitude+"NBCID"+gcli.NbCellId, Toast.LENGTH_SHORT).show();
+		Latitude = location.Latitude;
+		Longitude = location.Longitude;
 		return location;
 	}
 }

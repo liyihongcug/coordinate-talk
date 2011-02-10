@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.*;
 
 import org.guohai.android.cta.bll.*;
+import org.guohai.android.cta.model.LocationInfo;
 import org.guohai.android.cta.model.MessageInfo;
 import org.guohai.android.cta.model.ParseGpsInfo;
 
@@ -89,7 +90,7 @@ public class CoordinateTalk extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				gps.CellularPhone();
+				//gps.CellularPhone();
 			}
     		
     	});
@@ -183,6 +184,7 @@ public class CoordinateTalk extends Activity {
     
     /** 初始化 */
     private void inita(){
+    	textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度：" + gps.Longitude+"\n高度："+gps.Altitude);
     	//接收子线程消息
     	mMainHandler = new Handler(){
     		@Override
@@ -225,10 +227,13 @@ public class CoordinateTalk extends Activity {
     
     class ChildThread extends Thread{
     	public void run(){
+    	    gps.CellularPhone();
+    	    
     		Log.i(TAG,"Thread ChildThread run!");
     		while(theanState){
 
     			try {
+    				
         			Message toMain = mMainHandler.obtainMessage();
         			toMain.obj = "维度：" +  gps.Latitude+ "\n经度：" + gps.Longitude+"\n高度："+gps.Altitude;
         			mMainHandler.sendMessage(toMain);
