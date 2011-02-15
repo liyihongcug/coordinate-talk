@@ -23,6 +23,8 @@ import android.view.*;
 import org.guohai.android.cta.bll.*;
 import org.guohai.android.cta.model.MessageInfo;
 import org.guohai.android.cta.model.ParseGpsInfo;
+import org.guohai.android.cta.utility.GPSUtilities;
+import org.guohai.android.cta.utility.Tools;
 
 /**
  * Main views 
@@ -240,21 +242,24 @@ public class CoordinateTalk extends Activity {
     
     class ChildThread extends Thread{
     	public void run(){
-    	    gps.CellularPhone();
+    	    //gps.CellularPhone();
     	    
     		Log.i(TAG,"Thread ChildThread run!");
     		while(theanState){
 
-    			try {
+  
     				
         			Message toMain = mMainHandler.obtainMessage();
         			toMain.obj = "维度：" +  gps.Latitude+ "\n经度：" + gps.Longitude+"\n高度："+gps.Altitude;
         			mMainHandler.sendMessage(toMain);
-					sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+					try {
+						sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						throw e;
+					}
+
     		}
     	}
     }

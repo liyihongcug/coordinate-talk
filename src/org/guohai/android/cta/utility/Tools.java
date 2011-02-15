@@ -3,7 +3,7 @@
  * (GPLv3 http://www.gnu.org/licenses/gpl.html)
  * Copyright 2011 by H!Guo
  */
-package org.guohai.android.cta.bll;
+package org.guohai.android.cta.utility;
 
 import android.content.Context;
 import android.telephony.TelephonyManager;
