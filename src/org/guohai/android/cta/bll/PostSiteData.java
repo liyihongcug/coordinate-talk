@@ -10,6 +10,7 @@ import org.guohai.android.cta.R;
 import org.guohai.android.cta.model.ParseGpsInfo;
 import org.guohai.android.cta.utility.ErrorInfoParse;
 import org.guohai.android.cta.utility.HttpRest;
+import org.guohai.android.cta.utility.Tools;
 import org.guohai.android.cta.model.GsmCellLocationInfo;
 import org.guohai.android.cta.model.LocationInfo;
 import org.guohai.android.cta.model.MessageInfo;
@@ -62,7 +63,7 @@ public class PostSiteData {
 		dataList.add(new BasicNameValuePair("lac", Integer.toString(parm.LocationAreaCode)));
 		dataList.add(new BasicNameValuePair("mcc",Integer.toString(parm.MobileCountryCode)));
 		dataList.add(new BasicNameValuePair("mnc",Integer.toString(parm.MobileNetworkCode)));
-		dataList.add(new BasicNameValuePair("imei",""));
+		dataList.add(new BasicNameValuePair("imei",Tools.GetPhoneImei(context)));
 		
 		ResultInfo data = HttpRest.HttpPostClient("http://android.guohai.org/api/?fun=gsm", dataList);
 		
@@ -83,7 +84,7 @@ public class PostSiteData {
 	 * @param message
 	 * @return
 	 */
-	public String AddMessage(MessageInfo message,Context context)
+	public ResultInfo AddMessage(MessageInfo message,Context context)
 	{		
 		List <NameValuePair> dataList = new ArrayList <NameValuePair>();
 		dataList.add(new BasicNameValuePair("Note",message.Note));
@@ -92,14 +93,11 @@ public class PostSiteData {
 		dataList.add(new BasicNameValuePair("Longitude",Double.toString(message.Longitude)));
 		dataList.add(new BasicNameValuePair("Altitude",Double.toString(message.Altitude)));
 		
-		ResultInfo data = HttpRest.HttpPostClient("http://android.guohai.org/api/?fun=add", dataList);	
-		
-		if(0<=data.State){
-			return context.getString(R.string.error_info_send_message_succeed);
-		}
-		else{
-			return context.getString(R.string.error_info_send_message_failure);
-		}
+		ResultInfo data = HttpRest.HttpPostClient("http://android.guohai.org/api/?fun=add", dataList);
+		Log.i(TAG,"["+data.State+data.Message+"]");
+		data.Message=context.getString(R.string.error_info_send_message_succeed);
+		return data;
+
 	}
 	
 	

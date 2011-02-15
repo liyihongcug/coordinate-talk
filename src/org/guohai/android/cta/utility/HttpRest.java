@@ -76,9 +76,10 @@ public class HttpRest {
 				}
 				Log.i(TAG,reString);
 				JSONObject jsonObj;
+				
 				try {
 					jsonObj = new JSONObject(reString);
-					result.State = jsonObj.getInt("state");
+					result.State =jsonObj.getInt("state");
 					result.Message = jsonObj.getString("message");
 					return result;
 				} catch (JSONException e) {
