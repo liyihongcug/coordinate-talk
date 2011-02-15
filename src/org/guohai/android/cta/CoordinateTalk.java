@@ -257,7 +257,7 @@ public class CoordinateTalk extends Activity {
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						throw e;
+
 					}
 
     		}
