@@ -1,52 +1,55 @@
 package org.guohai.android.cta.bll;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
+import org.guohai.android.cta.R;
 import org.guohai.android.cta.model.ParseGpsInfo;
+import org.guohai.android.cta.utility.ErrorInfoParse;
 import org.guohai.android.cta.utility.HttpRest;
 import org.guohai.android.cta.model.GsmCellLocationInfo;
 import org.guohai.android.cta.model.LocationInfo;
 import org.guohai.android.cta.model.MessageInfo;
+import org.guohai.android.cta.model.ResultInfo;
+
 import android.util.Log;
 import android.content.Context;
 
 public class PostSiteData {
 	private static final String TAG="CoordinateTalk";
-	/** 反向解析 地址  */
-	public String GetParse(ParseGpsInfo parm){		
+
+	/**
+	 * 反向解析地址
+	 * @param parm 位置GPS信息
+	 * @Context context 
+	 * @return 返回解析后的地址
+	 */
+	public String GetParse(ParseGpsInfo parm,Context context){		
 		
 		List <NameValuePair> dataList = new ArrayList <NameValuePair>();
+		//拼装参数
 		dataList.add(new BasicNameValuePair("SendAccount",parm.SendAccount));
 		dataList.add(new BasicNameValuePair("Latitude", Double.toString(parm.Latitude)));
 		dataList.add(new BasicNameValuePair("Longitude",Double.toString(parm.Longitude)));
 		
-		String data = HttpRest.HttpPostClient("http://android.guohai.org/api/?fun=parse", dataList);
+		ResultInfo data = HttpRest.HttpPostClient("http://android.guohai.org/api/?fun=parse", dataList);
 		
-		if(data == null)
-		{
-			return "失败了over";
-		}
-		return data;		
+		
+		if(0<=data.State){
+			return data.Message;
+		}else{
+			return ErrorInfoParse.GetErrorMessage(context, data.State);
+		}		
 	}
 	
 	
 	/**
-	 * POST数据
-	 * @param parm
+	 * 通过基站解析坐标
+	 * @param parm 基站信息
+	 * @Context context 
 	 * @return
 	 */
 	public LocationInfo FromGSMGetLocation(GsmCellLocationInfo parm,Context context)
@@ -61,22 +64,26 @@ public class PostSiteData {
 		dataList.add(new BasicNameValuePair("mnc",Integer.toString(parm.MobileNetworkCode)));
 		dataList.add(new BasicNameValuePair("imei",""));
 		
-		String data = HttpRest.HttpPostClient("http://android.guohai.org/api/?fun=gsm", dataList);
+		ResultInfo data = HttpRest.HttpPostClient("http://android.guohai.org/api/?fun=gsm", dataList);
 		
 		if(data == null)
 		{
 			return location;
 		}
 		
-		String[] sArray = data.split(",");
+		String[] sArray = data.Message.split(",");
 		location.Latitude = Double.parseDouble(sArray[0]);
 		location.Longitude = Double.parseDouble(sArray[1]);
 		return location;	
 	}
 	
 	
-	/** 增加一   */
-	public String AddMessage(MessageInfo message)
+	/**
+	 * 增加消息
+	 * @param message
+	 * @return
+	 */
+	public String AddMessage(MessageInfo message,Context context)
 	{		
 		List <NameValuePair> dataList = new ArrayList <NameValuePair>();
 		dataList.add(new BasicNameValuePair("Note",message.Note));
@@ -85,12 +92,14 @@ public class PostSiteData {
 		dataList.add(new BasicNameValuePair("Longitude",Double.toString(message.Longitude)));
 		dataList.add(new BasicNameValuePair("Altitude",Double.toString(message.Altitude)));
 		
-		String data = HttpRest.HttpPostClient("http://android.guohai.org/api/?fun=add", dataList);		
-		if(data == null)
-		{
-			return "失败了over";
+		ResultInfo data = HttpRest.HttpPostClient("http://android.guohai.org/api/?fun=add", dataList);	
+		
+		if(0<=data.State){
+			return context.getString(R.string.error_info_send_message_succeed);
 		}
-		return "200";
+		else{
+			return context.getString(R.string.error_info_send_message_failure);
+		}
 	}
 	
 	
