@@ -37,7 +37,8 @@ public class HttpRest {
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "UnsupportedEncodingException";
+			Log.e(TAG,e.getMessage());		
+			return null;
 		}
 		httpPost.setEntity(entity);
 		
@@ -61,12 +62,13 @@ public class HttpRest {
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Log.e(TAG,e.getMessage());	
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "失败了IOException";
+			Log.e(TAG,e.getMessage());	
 		}
-		return "失败了Exception";
+		return null;
 	}
 }

@@ -113,7 +113,7 @@ public class CoordinateTalk extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				HttpRest httpRest = new HttpRest();
+				PostSiteData httpRest = new PostSiteData();
 				ParseGpsInfo parseInfo = new ParseGpsInfo();
 				parseInfo.Latitude = gps.Latitude;
 				parseInfo.Longitude = gps.Longitude;
@@ -133,7 +133,7 @@ public class CoordinateTalk extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.v(TAG, "维");
-	    		HttpRest httpRest = new HttpRest();
+				PostSiteData httpRest = new PostSiteData();
 	    		MessageInfo message =new MessageInfo();
 	    		message.Altitude = gps.Altitude;
 	    		message.Latitude = gps.Latitude;
