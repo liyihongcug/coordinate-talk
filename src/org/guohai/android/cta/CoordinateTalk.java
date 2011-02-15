@@ -247,12 +247,12 @@ public class CoordinateTalk extends Activity {
     		Log.i(TAG,"Thread ChildThread run!");
     		while(theanState){
 
-  
+    			try {
     				
         			Message toMain = mMainHandler.obtainMessage();
         			toMain.obj = "维度：" +  gps.Latitude+ "\n经度：" + gps.Longitude+"\n高度："+gps.Altitude;
         			mMainHandler.sendMessage(toMain);
-					try {
+					
 						sleep(1000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
