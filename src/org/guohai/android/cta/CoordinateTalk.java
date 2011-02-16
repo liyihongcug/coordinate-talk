@@ -40,6 +40,8 @@ public class CoordinateTalk extends Activity {
     private EditText editMessage;
     private Button btnWhere;
     private TextView textAddress;
+    
+    
     private GPSUtilities gps;
     private static final int MENU_CONFIG=0;
     private static final int MENU_HELP=2;
@@ -47,7 +49,7 @@ public class CoordinateTalk extends Activity {
     
     private Handler mMainHandler;
     private static boolean theanState=false;
-    private ChildThread childThread;
+    //private ChildThread childThread;
     
     //private boolean gpsIsOpen = false;
     
@@ -57,23 +59,30 @@ public class CoordinateTalk extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         findViews();
-        gps = new GPSUtilities(getApplicationContext());
-        inita();
-          	
+        setListeners();       
+        inita();          	
     }
     
     public void onDestory(){
     	super.onDestroy();
     	//mChildHandler.getLooper().quit();
     	theanState=false;
-    	childThread.destroy();
+    	mMainHandler.removeCallbacks(runnable);
+    }
+    
+    protected void onSopt()
+    {
+    	super.onStop();
+    	gps.pauseGetLocation();
+    	mMainHandler.removeCallbacks(runnable);
     }
     
     /** 当程序重新开始的时候 */
     @Override
     protected void onResume(){
-    	super.onResume();
+    	super.onResume();    	
     	gps.getLocation();
+    	mMainHandler.postDelayed(runnable, 1000);  
     }
     
     /** 当程序暂停的时候 */
@@ -81,6 +90,7 @@ public class CoordinateTalk extends Activity {
     protected void onPause(){
     	super.onPause();
     	gps.pauseGetLocation();
+    	mMainHandler.removeCallbacks(runnable);
     }
     
     /** Find all views */
@@ -90,75 +100,81 @@ public class CoordinateTalk extends Activity {
     	editMessage = (EditText) findViewById(R.id.editText1);
     	btnRefer = (Button)findViewById(R.id.button_refer);
     	btnWhere = (Button)findViewById(R.id.where_am_i);
-    	btnTest = (Button)findViewById(R.id.button_test);
-    	btnTest.setOnClickListener(new Button.OnClickListener(){
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				//gps.CellularPhone();
-				TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-				GsmCellLocation gcl = (GsmCellLocation) tm.getCellLocation();
-				String a=gcl.getCid()+","+gcl.getLac()+"|";
-				List<NeighboringCellInfo> listNbInfo = tm.getNeighboringCellInfo();
-				int count=listNbInfo.size();
-				for(int i=0;i<count;i++){
-					a+= listNbInfo.get(i).getCid()+","+listNbInfo.get(i).getLac()+","+listNbInfo.get(i).getRssi()+"|";//取邻居小区号
-				}
-				Toast.makeText(CoordinateTalk.this, a, Toast.LENGTH_LONG).show();
-			}
-    		
-    	});
-    	btnWhere.setOnClickListener(new Button.OnClickListener(){
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				PostSiteData httpRest = new PostSiteData();
-				ParseGpsInfo parseInfo = new ParseGpsInfo();
-				parseInfo.Latitude = gps.Latitude;
-				parseInfo.Longitude = gps.Longitude;
-				parseInfo.SendAccount = Tools.GetPhoneImei(getApplicationContext());
-				if(parseInfo.Latitude==0 || parseInfo.Longitude==0){
-	    			Toast.makeText(CoordinateTalk.this, "定位中..", Toast.LENGTH_SHORT).show();
-	    			return ;
-				}
-				String Result = httpRest.GetParse(parseInfo);
-				textAddress.setText(Result);
-			}
-    		
-    	});
-    	
-    	btnRefer.setOnClickListener(new Button.OnClickListener(){
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Log.v(TAG, "维");
-				PostSiteData httpRest = new PostSiteData();
-	    		MessageInfo message =new MessageInfo();
-	    		message.Altitude = gps.Altitude;
-	    		message.Latitude = gps.Latitude;
-	    		message.Longitude = gps.Longitude;
-	    		message.Note = editMessage.getText().toString();
-	    		if(message.Note.length()==0){
-	    			Toast.makeText(CoordinateTalk.this, "发送内容不能为空", Toast.LENGTH_SHORT).show();
-	    			return ;
-	    		}
-	    		message.SendAccount=Tools.GetPhoneImei(getApplicationContext());
-				if(message.Latitude==0 || message.Longitude==0){
-	    			Toast.makeText(CoordinateTalk.this, "定位中..", Toast.LENGTH_SHORT).show();
-	    			return ;
-				}
-	    		String Result = httpRest.AddMessage(message);
-	    		Log.i(TAG,"["+Result+"]");
-	    		if(Result.equals("200")){
-	    			Log.i(TAG,Result+"1111");
-	    			Toast.makeText(CoordinateTalk.this, "发送成功", Toast.LENGTH_SHORT).show();
-	    			editMessage.setText("");
-	    		}
-	    		//textCoordinate.setText( httpRest.AddMessage(message));
-			}
-        });
+    	btnTest = (Button)findViewById(R.id.button_test);  
     }
+    
+    private void setListeners() {
+    	btnRefer.setOnClickListener(btnReferBMI);
+    	btnWhere.setOnClickListener(btnWhereBMI);
+    	btnTest.setOnClickListener(btnTestBMI);
+    }
+    
+    private Button.OnClickListener btnTestBMI = new Button.OnClickListener()
+    {
+    	public void onClick(View v)
+        {
+    		//gps.CellularPhone();
+    		TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+			GsmCellLocation gcl = (GsmCellLocation) tm.getCellLocation();
+			String a=gcl.getCid()+","+gcl.getLac()+"|";
+			List<NeighboringCellInfo> listNbInfo = tm.getNeighboringCellInfo();
+			int count=listNbInfo.size();
+			for(int i=0;i<count;i++){
+				a+= listNbInfo.get(i).getCid()+","+listNbInfo.get(i).getLac()+","+listNbInfo.get(i).getRssi()+"|";//取邻居小区号
+			}
+			Toast.makeText(CoordinateTalk.this, a, Toast.LENGTH_LONG).show();
+        }    	
+    };
+    
+    
+    private Button.OnClickListener btnWhereBMI = new Button.OnClickListener()
+    {
+    	public void onClick(View v)
+        {
+    		PostSiteData httpRest = new PostSiteData();
+			ParseGpsInfo parseInfo = new ParseGpsInfo();
+			parseInfo.Latitude = gps.Latitude;
+			parseInfo.Longitude = gps.Longitude;
+			parseInfo.SendAccount = Tools.GetPhoneImei(getApplicationContext());
+			if(parseInfo.Latitude==0 || parseInfo.Longitude==0){
+    			Toast.makeText(CoordinateTalk.this, "定位中..", Toast.LENGTH_SHORT).show();
+    			return ;
+			}
+			String Result = httpRest.GetParse(parseInfo);
+			textAddress.setText(Result);
+        }        
+    };
+    
+    
+    private Button.OnClickListener btnReferBMI = new Button.OnClickListener()
+    {
+        public void onClick(View v)
+        {
+        	Log.v(TAG, "维");
+			PostSiteData httpRest = new PostSiteData();
+    		MessageInfo message =new MessageInfo();
+    		message.Altitude = gps.Altitude;
+    		message.Latitude = gps.Latitude;
+    		message.Longitude = gps.Longitude;
+    		message.Note = editMessage.getText().toString();
+    		if(message.Note.length()==0){
+    			Toast.makeText(CoordinateTalk.this, "发送内容不能为空", Toast.LENGTH_SHORT).show();
+    			return ;
+    		}
+    		message.SendAccount=Tools.GetPhoneImei(getApplicationContext());
+			if(message.Latitude==0 || message.Longitude==0){
+    			Toast.makeText(CoordinateTalk.this, "定位中..", Toast.LENGTH_SHORT).show();
+    			return ;
+			}
+    		String Result = httpRest.AddMessage(message);
+    		Log.i(TAG,"["+Result+"]");
+    		if(Result.equals("200")){
+    			Log.i(TAG,Result+"1111");
+    			Toast.makeText(CoordinateTalk.this, "发送成功", Toast.LENGTH_SHORT).show();
+    			editMessage.setText("");
+    		}
+        }
+    };
     
     /** 创建菜单 */
     @Override
@@ -199,23 +215,19 @@ public class CoordinateTalk extends Activity {
     
     /** 初始化 */
     private void inita(){
+    	gps = new GPSUtilities(getApplicationContext());
+    	
     	textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度：" + gps.Longitude+"\n高度："+gps.Altitude);
     	//接收子线程消息
-    	mMainHandler = new Handler(){
-    		@Override
-    		public void handleMessage(Message msg){
-    			textCoordinate.setText((String)msg.obj);
-    		}
-    	};
+    	mMainHandler = new Handler();    		
+    	mMainHandler.postDelayed(runnable, 1000);  
     	
         if(gps.GPSDeviceIsOpen()){
         	//textCoordinate.setText("true");
         	//gpsIsOpen=true;
 	        if(gps.getLocation()){
 	        	//textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度" + gps.Longitude);
-	        	theanState = true;
-	        	childThread = new ChildThread();
-	        	childThread.start();
+	        	theanState = true;	        
 	        }
         }
         else{
@@ -233,34 +245,23 @@ public class CoordinateTalk extends Activity {
 							}
 						})
 				.setNegativeButton(R.string.jump_gps_setting, null)
-
         		.show();
 
         	textCoordinate.setText("不打开GPS设置，本程序的某些功能可能无法正常执行！");
         }
     }
     
-    class ChildThread extends Thread{
-    	public void run(){
-    	    //gps.CellularPhone();
-    	    
-    		Log.i(TAG,"Thread ChildThread run!");
-    		while(theanState){
-
-    			try {
-    				
-        			Message toMain = mMainHandler.obtainMessage();
-        			toMain.obj = "维度：" +  gps.Latitude+ "\n经度：" + gps.Longitude+"\n高度："+gps.Altitude;
-        			mMainHandler.sendMessage(toMain);
-					
-						sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-
-					}
-
-    		}
-    	}
-    }
+     private Runnable runnable = new Runnable() {  
+         public void run() { 
+        	 Log.i(TAG,"Thread ChildThread run!");
+        	 if(theanState)
+        	 {        						
+	         	Message toMain = mMainHandler.obtainMessage();
+	         	toMain.obj = "维度：" +  gps.Latitude+ "\n经度：" + gps.Longitude+"\n高度："+gps.Altitude;
+	         	textCoordinate.setText((String)toMain.obj);  					
+        	 }
+        	 mMainHandler.postDelayed(runnable, 1000);  
+          }  
+    };     
+   
 }
