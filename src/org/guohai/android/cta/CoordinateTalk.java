@@ -48,10 +48,7 @@ public class CoordinateTalk extends Activity {
     private static final int MENU_EXIT=3;
     
     private Handler mMainHandler;
-    private static boolean theanState=false;
-    //private ChildThread childThread;
-    
-    //private boolean gpsIsOpen = false;
+    private static boolean gpsIsOpen=false;   
     
     /** Called when the activity is first created. */
     @Override
@@ -61,37 +58,7 @@ public class CoordinateTalk extends Activity {
         findViews();
         setListeners();       
         inita();          	
-    }
-    
-    public void onDestory(){
-    	super.onDestroy();
-    	//mChildHandler.getLooper().quit();
-    	theanState=false;
-    	mMainHandler.removeCallbacks(runnable);
-    }
-    
-    protected void onSopt()
-    {
-    	super.onStop();
-    	gps.pauseGetLocation();
-    	mMainHandler.removeCallbacks(runnable);
-    }
-    
-    /** 当程序重新开始的时候 */
-    @Override
-    protected void onResume(){
-    	super.onResume();    	
-    	gps.getLocation();
-    	mMainHandler.postDelayed(runnable, 1000);  
-    }
-    
-    /** 当程序暂停的时候 */
-    @Override
-    protected void onPause(){
-    	super.onPause();
-    	gps.pauseGetLocation();
-    	mMainHandler.removeCallbacks(runnable);
-    }
+    }  
     
     /** Find all views */
     private void findViews(){
@@ -108,7 +75,7 @@ public class CoordinateTalk extends Activity {
     	btnWhere.setOnClickListener(btnWhereBMI);
     	btnTest.setOnClickListener(btnTestBMI);
     }
-    
+    /** 测试按钮事件 */
     private Button.OnClickListener btnTestBMI = new Button.OnClickListener()
     {
     	public void onClick(View v)
@@ -124,9 +91,8 @@ public class CoordinateTalk extends Activity {
 			}
 			Toast.makeText(CoordinateTalk.this, a, Toast.LENGTH_LONG).show();
         }    	
-    };
-    
-    
+    };    
+    /** 定位按钮事件 */
     private Button.OnClickListener btnWhereBMI = new Button.OnClickListener()
     {
     	public void onClick(View v)
@@ -143,9 +109,8 @@ public class CoordinateTalk extends Activity {
 			String Result = httpRest.GetParse(parseInfo);
 			textAddress.setText(Result);
         }        
-    };
-    
-    
+    };    
+    /** 发送按钮事件 */
     private Button.OnClickListener btnReferBMI = new Button.OnClickListener()
     {
         public void onClick(View v)
@@ -215,22 +180,13 @@ public class CoordinateTalk extends Activity {
     
     /** 初始化 */
     private void inita(){
-    	gps = new GPSUtilities(getApplicationContext());
-    	
+    	gps = new GPSUtilities(getApplicationContext());    	
     	textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度：" + gps.Longitude+"\n高度："+gps.Altitude);
-    	//接收子线程消息
-    	mMainHandler = new Handler();    		
-    	mMainHandler.postDelayed(runnable, 1000);  
-    	
-        if(gps.GPSDeviceIsOpen()){
-        	//textCoordinate.setText("true");
-        	//gpsIsOpen=true;
-	        if(gps.getLocation()){
-	        	//textCoordinate.setText("维度：" +  gps.Latitude+ "\n经度" + gps.Longitude);
-	        	theanState = true;	        
-	        }
-        }
-        else{
+    	//接收子线程消息    
+    	openHandler();
+       
+        if(!gpsIsOpen)
+        {
         	new AlertDialog.Builder(CoordinateTalk.this)
         		.setTitle(R.string.setting_gps_title)
         		.setMessage(R.string.setting_gps_info)
@@ -251,10 +207,36 @@ public class CoordinateTalk extends Activity {
         }
     }
     
-     private Runnable runnable = new Runnable() {  
+    public void onDestory(){
+    	super.onDestroy();    	
+    	CloseHandler();
+    }
+    
+    protected void onSopt()
+    {
+    	super.onStop();    	
+    	CloseHandler();
+    }
+    
+    /** 当程序重新开始的时候 */
+    @Override
+    protected void onResume(){
+    	super.onResume();
+    	openHandler(); 
+    }
+    
+    /** 当程序暂停的时候 */
+    @Override
+    protected void onPause(){
+    	super.onPause();    
+    	CloseHandler();
+    }
+    
+    /** 子程序运行方法 */
+    private Runnable runnable = new Runnable() {  
          public void run() { 
         	 Log.i(TAG,"Thread ChildThread run!");
-        	 if(theanState)
+        	 if(gpsIsOpen)
         	 {        						
 	         	Message toMain = mMainHandler.obtainMessage();
 	         	toMain.obj = "维度：" +  gps.Latitude+ "\n经度：" + gps.Longitude+"\n高度："+gps.Altitude;
@@ -262,6 +244,32 @@ public class CoordinateTalk extends Activity {
         	 }
         	 mMainHandler.postDelayed(runnable, 1000);  
           }  
-    };     
+    }; 
+    
+    /** 创建Handler */
+    private void openHandler()
+    {
+    	 if(gps.GPSDeviceIsOpen() && gps.getLocation()){         	
+ 	        gpsIsOpen = true;	
+ 	        if(mMainHandler == null)
+ 	        {
+ 	        	mMainHandler = new Handler();
+ 	        } 	        	
+ 	        mMainHandler.postDelayed(runnable, 1000);   	        
+         }
+    }
+    
+    /** 关闭Handler */
+    private void CloseHandler()
+    {
+    	if(gpsIsOpen)
+    	{
+    		gps.pauseGetLocation();
+    	}
+    	if(mMainHandler != null)
+    	{
+    		mMainHandler.removeCallbacks(runnable);
+    	}    	
+    } 
    
 }
