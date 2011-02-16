@@ -9,9 +9,14 @@
     <string name="open_gps">ple open GPS devices</string>
     
     <string name="menu_config">Config</string>
-    <string name="menu_swapaccount">Swap account</string>
+    <string name="menu_register_account">Register account</string>
     <string name="menu_help">Help</string>
     <string name="menu_Exit">Exit</string>
     
     <string name="datapost_uri">http://android.guohai.org/api/cta.php</string>
+    <string name="error_info_post_error">Post data failure</string>
+    <string name="error_info_unknown_error">Unknown error</string>
+    <string name="error_info_coordinate_parse_failure">Coordinate parse failure</string>
+    <string name="error_info_send_message_succeed">Send Message Succeed</string>
+    <string name="error_info_send_message_failure">Send Message Failure</string>
 </resources>

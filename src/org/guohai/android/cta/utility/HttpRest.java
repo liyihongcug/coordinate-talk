@@ -1,3 +1,8 @@
+/**
+ * 此程序为开源程序，遵循GPLv3版本发布，并受其保护。
+ * (GPLv3 http://www.gnu.org/licenses/gpl.html)
+ * Copyright 2011 by CTA Group
+ */
 package org.guohai.android.cta.utility;
 
 import java.io.BufferedReader;
@@ -15,6 +20,9 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
+import org.guohai.android.cta.model.ResultInfo;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.util.Log;
 
@@ -22,13 +30,23 @@ public class HttpRest {
 	
 	private static final String TAG="CoordinateTalk";
 	
-	/** HTTPPost数据 */
-	public static String HttpPostClient(String url, List<NameValuePair> pairs)
+	/**
+	 * HTTPPost数据
+	 * @param url POST地址
+	 * @param pairs 参数列表
+	 * @return 成功返回JOSN参数，失败返回null
+	 */
+	public static ResultInfo HttpPostClient(String url, List<NameValuePair> pairs)
 	{
 		//create http client
 		HttpClient client = new DefaultHttpClient();
 		//create post request
 		HttpPost httpPost = new HttpPost(url);	
+		//return value
+		ResultInfo result = new ResultInfo();
+		//init eroor value
+		result.State=-1000;
+		result.Message="posterror";
 		
 		HttpEntity entity;
 		try {
@@ -38,7 +56,7 @@ public class HttpRest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Log.e(TAG,e.getMessage());		
-			return null;
+			return result;
 		}
 		httpPost.setEntity(entity);
 		
@@ -56,8 +74,24 @@ public class HttpRest {
 				if(entityHtml!=null){
 					entityHtml.consumeContent();
 				}
-				Log.i(TAG,reString);			
-				return reString;
+				Log.i(TAG,reString);
+				JSONObject jsonObj;
+				
+				try {
+					jsonObj = new JSONObject(reString);
+					result.State =jsonObj.getInt("state");
+					result.Message = jsonObj.getString("message");
+					return result;
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					Log.e(TAG, e.getMessage());
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					Log.e(TAG, e.getMessage());
+				}
+				return result;
 			}				
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -69,6 +103,6 @@ public class HttpRest {
 			e.printStackTrace();
 			Log.e(TAG,e.getMessage());	
 		}
-		return null;
+		return result;
 	}
 }
