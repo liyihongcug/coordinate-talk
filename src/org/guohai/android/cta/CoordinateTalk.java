@@ -62,6 +62,8 @@ public class CoordinateTalk extends Activity {
 			case 1:
 				textCoordinate.setText((String)msg.obj);
 				break;
+			case 2:
+				break;
 			}	
 		}
 	};
