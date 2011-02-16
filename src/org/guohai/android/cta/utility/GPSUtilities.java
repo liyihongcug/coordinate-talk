@@ -16,7 +16,7 @@ import android.util.Log;
  * @author H!Guo 
  */
 public class GPSUtilities {
-	//private static final String TAG="CoordinateTalk";
+	private static final String TAG="CoordinateTalk";
 	
 	private Context context;
 	public double Latitude;//维度
@@ -41,7 +41,7 @@ public class GPSUtilities {
 	/** 开始监听 */
 	public boolean getLocation(){
 		//取位置管理服务
-		
+		Log.i(TAG,"getLocation Start");
 		//locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
 		if(null == locationManager){
 			return false;
