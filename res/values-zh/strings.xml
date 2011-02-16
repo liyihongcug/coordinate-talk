@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">坐标聊天</string>
+    <string name="data_file_name">coordinate_talk</string>
+    <string name="gps_setting">设置</string>
+    <string name="jump_gps_setting">跳过</string>
+    <string name="setting_gps_title">您的GPS设备没有开启</string>
+    <string name="setting_gps_info">请在位置设置中打开GPS和无线网络</string>
+    <string name="open_gps">请开启GPS</string>
+    
+    <string name="menu_config">设置</string>
+    <string name="menu_swapaccount">改变账号</string>
+    <string name="menu_help">帮助</string>
+    <string name="menu_Exit">退出</string>
+    
+    <string name="datapost_uri">http://android.guohai.org/api/cta.php</string>
+</resources>
