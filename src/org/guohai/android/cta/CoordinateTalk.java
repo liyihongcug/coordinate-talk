@@ -6,6 +6,7 @@
 package org.guohai.android.cta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.*;
@@ -45,6 +46,7 @@ public class CoordinateTalk extends Activity {
     private EditText editMessage;
     private Button btnWhere;
     private TextView textAddress;
+    private ListView listLocal;
     
     private LocationInfo locationInfo;
     private List<ILocationManager> LocationManagers;
@@ -79,6 +81,7 @@ public class CoordinateTalk extends Activity {
     	btnRefer = (Button)findViewById(R.id.button_refer);
     	btnWhere = (Button)findViewById(R.id.where_am_i);
     	btnTest = (Button)findViewById(R.id.button_test);
+    	listLocal=(ListView)findViewById(R.id.listlocalMessage);
     }
     
     
@@ -198,7 +201,24 @@ public class CoordinateTalk extends Activity {
     
     
     /** 初始化 */
-    private void inita(){    	
+    private void inita(){    
+    	//临时代码绑定LIST数据
+    	ArrayList<HashMap<String, String>> mylist = new ArrayList<HashMap<String, String>>();
+    	for(int i=1;i<5;i++){
+    		HashMap<String, String> map = new HashMap<String, String>();
+    		map.put("ItemName", "我是小"+i);
+        	map.put("ItemMessage", "我来过这里"+(i+5)+"次了!");
+        	mylist.add(map);
+    	}
+    	SimpleAdapter mSchedule = new SimpleAdapter(this,
+    			mylist,
+    			R.layout.list_local_message_item,
+    			new String[]{"ItemName","ItemMessage"},
+    			new int[]{R.id.ItemName,R.id.ItemMessage}
+    			);
+    	listLocal.setAdapter(mSchedule);
+    	//临时代码结束 
+    	
     	locationInfo = new LocationInfo();    
     	GSMManager gsm = new GSMManager(getApplicationContext(),locationInfo);
     	GPSManager gps = new GPSManager(getApplicationContext(),locationInfo);    	    	
