@@ -212,7 +212,7 @@ public class CoordinateTalk extends Activity {
     	openHandler();
     	textCoordinate.setText("维度：" +  locationInfo.Latitude+ "\n经度：" + locationInfo.Longitude+"\n高度："+locationInfo.Altitude);
 
-        if(gps.IsOpen())
+        if(!gps.IsOpen())
         {
         	new AlertDialog.Builder(CoordinateTalk.this)
         		.setTitle(R.string.setting_gps_title)
