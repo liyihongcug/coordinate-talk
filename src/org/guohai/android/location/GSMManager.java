@@ -20,8 +20,8 @@ public class GSMManager  implements ILocationManager {
 	
 	private Context context;		
 	private LocationInfo info;	
-	private Timer timer = new Timer();  
-	private long delay = 1000;
+	private Timer timer;  
+	private long delay = 10;
 	private long period = 5000;
 	private TelephonyManager tm;
 	
@@ -29,6 +29,7 @@ public class GSMManager  implements ILocationManager {
 	public GSMManager(Context parm,LocationInfo info){
 		context = parm;
 		this.setInfo(info);
+		timer = new Timer();
 		tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 	}
 	
@@ -37,13 +38,14 @@ public class GSMManager  implements ILocationManager {
 		this.setInfo(info);
 		this.delay = delay;
 		this.period = period;
+		timer = new Timer();
 		tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 	}
 	
 	
 	@Override
-	public boolean IsOpen() {	
-		if(tm.getNetworkType() == 1)
+	public boolean IsOpen() {
+		if(tm != null && tm.getNetworkType() == 1)
 		{
 			return true;
 		}
@@ -52,8 +54,10 @@ public class GSMManager  implements ILocationManager {
 
 	@Override
 	public boolean StartLocation() {
-		timer.cancel();		
-		timer.scheduleAtFixedRate(task, delay, period);
+		if(IsOpen())
+		{
+			timer.schedule(task, delay, period);
+		}
 		return true;
 	}
 
@@ -70,9 +74,6 @@ public class GSMManager  implements ILocationManager {
 
 	/** 通过手机基站定位 */
 	private void CellularPhone(){		
-		if(tm == null)
-			return;
-		
 		if(!IsOpen())
 			return;		
 		
@@ -91,7 +92,7 @@ public class GSMManager  implements ILocationManager {
 		Log.i(TAG,"call_id="+gcli.CellId+",location_area_code="+gcli.LocationAreaCode+",mobile_country_code="+gcli.MobileCountryCode+",mobile_network_code="+gcli.MobileNetworkCode);
 		
 	    PostSiteData httpRest = new PostSiteData();
-	    setInfo(httpRest.FromGSMGetLocation(gcli, context));	
+	    setInfo(httpRest.FromGSMGetLocation(gcli, context));
 	}
 
 	public void setInfo(LocationInfo info) {
