@@ -8,7 +8,7 @@ package org.guohai.android.cta.model;
  * Model 
  * @author H!Guo 
  */
-public class GsmCellLocationInfo {
+public class GsmCellLocationInfo  {
 	public int CellId=0;
 	public int LocationAreaCode=0;
 	public int MobileCountryCode=0;
