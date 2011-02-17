@@ -206,18 +206,12 @@ public class CoordinateTalk extends Activity {
     	LocationManagers.add(gsm);
     	LocationManagers.add(gps);
     	
-    	for (ILocationManager lm : LocationManagers) {
-			if(lm.IsOpen())
-			{
-				lm.StartLocation();
-			}
-		}    
-    	
-    	textCoordinate.setText("维度：" +  locationInfo.Latitude+ "\n经度：" + locationInfo.Longitude+"\n高度："+locationInfo.Altitude);
     	//接收子线程消息    
     	mMainHandler = new Handler();
-    	mMainHandler.postDelayed(runnable, 1000);   	
-       
+    	
+    	openHandler();
+    	textCoordinate.setText("维度：" +  locationInfo.Latitude+ "\n经度：" + locationInfo.Longitude+"\n高度："+locationInfo.Altitude);
+
         if(gps.IsOpen())
         {
         	new AlertDialog.Builder(CoordinateTalk.this)
@@ -276,13 +270,25 @@ public class CoordinateTalk extends Activity {
     
     /** 创建Handler */
     private void openHandler()
-    {    	        	
+    {    
+    	for (ILocationManager lm : LocationManagers) {
+			if(lm.IsOpen())
+			{
+				lm.StartLocation();
+			}
+		}    
  	    mMainHandler.postDelayed(runnable, 1000); 
     }
     
     /** 关闭Handler */
     private void CloseHandler()
     { 
+    	for (ILocationManager lm : LocationManagers) {
+			if(lm.IsOpen())
+			{
+				lm.PauseGetLocation();
+			}
+		} 
     	mMainHandler.removeCallbacks(runnable);    	   	
     } 
 }
