@@ -17,8 +17,8 @@ public class ErrorInfoParse {
 	 * @param state
 	 * @return
 	 */
-	public static String GetErrorMessage(Context context,int state){
-		switch(state){
+	public static String GetErrorMessage(Context context,int state){		
+		switch(state){		
 		case -1001:
 			return context.getString(R.string.error_info_post_error);
 		case -1002:
