@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    
+    <LinearLayout 
+	    android:orientation="horizontal"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content" >
+	    <Button 
+	    	android:text="Camera"
+			android:id="@+id/button_camera"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+		<ImageView
+		    android:id="@+id/imageCapture"
+		    android:src="@drawable/empty"
+	    	android:layout_width="64dp"
+	    	android:layout_height="64dp"
+	    	/>
+    </LinearLayout>
+    
+<ListView
+	android:layout_height="wrap_content"
+	android:id="@+id/listlocalMessage"
+	android:layout_width="fill_parent" />
+    
+<EditText
+	android:text=""
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:id="@+id/editText1"/>
+<Button
+	android:text="提交"
+	android:id="@+id/button_refer"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"/>
+<TextView  
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:id="@+id/coordinate"/>
+<Button
+	android:text="我在哪里"
+	android:id="@+id/where_am_i"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"/>
+<TextView  
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:id="@+id/my_address"/>
+    
+<Button
+	android:text="测试-通过基站解析坐标"
+	android:id="@+id/button_test"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"/>
+</LinearLayout>
