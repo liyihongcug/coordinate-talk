@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reg_account">Account[Email]:</string>
+    <string name="reg_nickname">Nick name:</string>
+    <string name="reg_password">password:</string>
+</resources>
