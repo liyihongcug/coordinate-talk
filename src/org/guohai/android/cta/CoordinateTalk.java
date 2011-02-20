@@ -104,6 +104,7 @@ public class CoordinateTalk extends Activity {
     	/** 接收 Activity 返回 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i(TAG,"进入了onActivityResult");
 		if (requestCode == TAKE_PICTURE) {
 			if (resultCode == RESULT_OK) {
 				//if (data != null) {
@@ -112,7 +113,7 @@ public class CoordinateTalk extends Activity {
 				
 					Bitmap bitmap = BitmapFactory.decodeFile( Environment.getExternalStorageDirectory().toString().concat("/ctadata/test.jpg"), options ); 
 					//Bitmap bm = (Bitmap) data.getExtras().get("data");
-					
+					Bitmap.createScaledBitmap(bitmap, 320, 240, true);
 					imageCapture.setImageBitmap(bitmap); // Display image
 				//}
 			}
