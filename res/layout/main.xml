@@ -20,12 +20,6 @@
 	    	android:layout_height="64dp"
 	    	/>
     </LinearLayout>
-    
-<ListView
-	android:layout_height="wrap_content"
-	android:id="@+id/listlocalMessage"
-	android:layout_width="fill_parent" />
-    
 <EditText
 	android:text=""
 	android:layout_height="wrap_content"
@@ -55,4 +49,8 @@
 	android:id="@+id/button_test"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"/>
+<ListView
+	android:layout_height="wrap_content"
+	android:id="@+id/listlocalMessage"
+	android:layout_width="fill_parent" />
 </LinearLayout>

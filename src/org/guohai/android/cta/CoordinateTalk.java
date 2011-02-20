@@ -52,6 +52,10 @@ public class CoordinateTalk extends Activity {
     private TextView textAddress;
     private ListView listLocal;
     
+    private Button btnCamera;
+    private ImageView imageCapture;  
+    
+    
     private LocationInfo locationInfo;
     private List<ILocationManager> LocationManagers;
     
@@ -60,6 +64,8 @@ public class CoordinateTalk extends Activity {
     private static final int MENU_REGISTER_ACCOUNT=1;
     private static final int MENU_HELP=2;
     private static final int MENU_EXIT=3;  
+    
+    private static final int TAKE_PICTURE = 1;
     //接收子线程消息
     private Handler mMainHandler;
     
@@ -96,7 +102,7 @@ public class CoordinateTalk extends Activity {
     	btnRefer.setOnClickListener(btnReferBMI);
     	btnWhere.setOnClickListener(btnWhereBMI);
     	btnTest.setOnClickListener(btnTestBMI);
-    	btnCamera.setOnClickListener(btnCamera);
+    	btnCamera.setOnClickListener(btnCameraBMI);
     }
     
     	/** 接收 Activity 返回 */
@@ -116,7 +122,7 @@ public class CoordinateTalk extends Activity {
 	
 	
     /** 相机按钮 */
-    private Button.OnClickListener btnCamera = new Button.OnClickListener(){
+    private Button.OnClickListener btnCameraBMI = new Button.OnClickListener(){
     		@Override
 			public void onClick(View v) {
 				// startActivityForResult(new
@@ -132,7 +138,7 @@ public class CoordinateTalk extends Activity {
 				i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 				startActivityForResult(i, TAKE_PICTURE);
 			}
-    }
+    };
     
     /** 测试按钮事件 */
     private Button.OnClickListener btnTestBMI = new Button.OnClickListener()
