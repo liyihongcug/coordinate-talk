@@ -12,6 +12,7 @@ import java.util.List;
 
 import android.content.*;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.provider.*;
 import android.app.*;
 import android.net.Uri;
@@ -25,7 +26,6 @@ import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 import android.view.*;
-import android.view.View.OnClickListener;
 
 import org.guohai.android.cta.bll.*;
 
@@ -51,7 +51,9 @@ public class CoordinateTalk extends Activity {
     private Button btnWhere;
     private TextView textAddress;
     private ListView listLocal;
-    
+    private Button btnCamera;
+    private ImageView imageCapture;  
+    private static final int TAKE_PICTURE = 1;
     private LocationInfo locationInfo;
     private List<ILocationManager> LocationManagers;
     
@@ -96,7 +98,7 @@ public class CoordinateTalk extends Activity {
     	btnRefer.setOnClickListener(btnReferBMI);
     	btnWhere.setOnClickListener(btnWhereBMI);
     	btnTest.setOnClickListener(btnTestBMI);
-    	btnCamera.setOnClickListener(btnCamera);
+    	btnCamera.setOnClickListener(btnCameraBMI);
     }
     
     	/** 接收 Activity 返回 */
@@ -104,19 +106,23 @@ public class CoordinateTalk extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == TAKE_PICTURE) {
 			if (resultCode == RESULT_OK) {
-				if (data != null) {
-					Bitmap bm = (Bitmap) data.getExtras().get("data");
-					imageCapture.setImageBitmap(bm); // Display image
-				}
+				//if (data != null) {
+					BitmapFactory.Options options = new BitmapFactory.Options();  
+					options.inSampleSize = 4;
+				
+					Bitmap bitmap = BitmapFactory.decodeFile( Environment.getExternalStorageDirectory().toString().concat("/ctadata/test.jpg"), options ); 
+					//Bitmap bm = (Bitmap) data.getExtras().get("data");
+					
+					imageCapture.setImageBitmap(bitmap); // Display image
+				//}
 			}
-		} else {
-			super.onActivityResult(requestCode, resultCode, data);
 		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
 	
     /** 相机按钮 */
-    private Button.OnClickListener btnCamera = new Button.OnClickListener(){
+    private Button.OnClickListener btnCameraBMI = new Button.OnClickListener(){
     		@Override
 			public void onClick(View v) {
 				// startActivityForResult(new
@@ -124,15 +130,15 @@ public class CoordinateTalk extends Activity {
 				
 				File dir = new File(Environment.getExternalStorageDirectory().toString().concat("/ctadata"));
 				if(!dir.exists() && !dir.isDirectory()){
-					Log.d("CTA",dir.mkdirs()?"Create dir.":"Can't create dir.");
+					Log.d(TAG,dir.mkdirs()?"Create dir.":"Can't create dir.");
 				}
 				Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 				Uri uri = Uri.fromFile(new File(dir.getAbsolutePath().concat("/test.jpg")));
-				Log.d("CTA", uri.toString());
+				Log.d(TAG, uri.toString());
 				i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 				startActivityForResult(i, TAKE_PICTURE);
 			}
-    }
+    };
     
     /** 测试按钮事件 */
     private Button.OnClickListener btnTestBMI = new Button.OnClickListener()
