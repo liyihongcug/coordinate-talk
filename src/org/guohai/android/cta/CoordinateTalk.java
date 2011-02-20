@@ -282,7 +282,7 @@ public class CoordinateTalk extends Activity {
     /** 子程序运行方法 */
     private Runnable runnable = new Runnable() {  
          public void run() { 
-        	 Log.i(TAG,"Thread ChildThread run!");	         
+        	 //Log.i(TAG,"Thread ChildThread run!");	         
 	         textCoordinate.setText("维度：" +  locationInfo.Latitude+ "\n经度：" + locationInfo.Longitude+"\n高度："+locationInfo.Altitude);        	        	 
         	 mMainHandler.postDelayed(runnable, 1000);   
           }  
