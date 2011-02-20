@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reg_account">账号[Email]:</string>
+    <string name="reg_nickname">昵称:</string>
+    <string name="reg_password">密码:</string>
+</resources>
