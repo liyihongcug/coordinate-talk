@@ -23,6 +23,27 @@ public class PostSiteData {
 	private static final String TAG="CoordinateTalk";
 
 	/**
+	 * 取当前位置的留言
+	 * @param parm
+	 * @param context
+	 * @return
+	 */
+	public String GetCurrentLocationMessage(LocationInfo parm,Context context){
+		List <NameValuePair> dataList = new ArrayList <NameValuePair>();
+		//拼装参数
+		dataList.add(new BasicNameValuePair("Latitude", Double.toString(parm.Latitude)));
+		dataList.add(new BasicNameValuePair("Longitude",Double.toString(parm.Longitude)));
+		
+		ResultInfo data = HttpRest.HttpPostClient("http://android.guohai.org/api/?fun=getLocalMessage", dataList);
+		
+		if(0<=data.State){
+			return data.Message;
+		}else{
+			return ErrorInfoParse.GetErrorMessage(context, data.State);
+		}
+	}
+	
+	/**
 	 * 反向解析地址
 	 * @param parm 位置GPS信息
 	 * @Context context 
