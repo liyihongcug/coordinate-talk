@@ -152,6 +152,7 @@ public class CoordinateTalk extends Activity {
     	public void onClick(View v)
         {
     		//gps.CellularPhone();
+    		/*
     		TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 			GsmCellLocation gcl = (GsmCellLocation) tm.getCellLocation();
 			String a=gcl.getCid()+","+gcl.getLac()+"|";
@@ -161,7 +162,32 @@ public class CoordinateTalk extends Activity {
 				a+= listNbInfo.get(i).getCid()+","+listNbInfo.get(i).getLac()+","+listNbInfo.get(i).getRssi()+"|";//取邻居小区号
 			}
 			Toast.makeText(CoordinateTalk.this, a, Toast.LENGTH_LONG).show();
-			
+			*/
+       	 if(locationInfo.Latitude!=0){
+        	 
+	          	//临时代码绑定LIST数据
+	          	ArrayList<HashMap<String, String>> mylist = new ArrayList<HashMap<String, String>>();
+	          	PostSiteData httpRest = new PostSiteData();
+	          	String json = httpRest.GetCurrentLocationMessage(locationInfo, context);
+	           	try {
+	      			//JSONObject jsonObjSplit= new JSONObject(json);
+	      			JSONArray ja =new JSONArray(json);
+	      			for(int i =0 ;i<ja.length();i++){
+	      				JSONObject jo = (JSONObject)ja.get(i);
+	      	    		HashMap<String, String> map = new HashMap<String, String>();
+	      	    		map.put("ItemName", jo.getString("username"));
+	      	        	map.put("ItemMessage", jo.getString("note"));
+	      	        	mylist.add(map);
+	      			}
+	      	    	SimpleAdapter mSchedule = new SimpleAdapter(context,mylist,R.layout.list_local_message_item,new String[]{"ItemName","ItemMessage"},new int[]{R.id.ItemName,R.id.ItemMessage}		);
+	      	    	listLocal.setAdapter(mSchedule);
+	      			
+	      		} catch (JSONException e) {
+	      			// TODO Auto-generated catch block
+	      			e.printStackTrace();
+	      		}
+	          	//临时代码结束 
+     	}
         }    	
     };    
     /** 定位按钮事件 */
@@ -325,31 +351,7 @@ public class CoordinateTalk extends Activity {
         	 //Log.i(TAG,"Thread ChildThread run!");	         
 	         textCoordinate.setText("维度：" +  locationInfo.Latitude+ "\n经度：" + locationInfo.Longitude+"\n高度："+locationInfo.Altitude);        	        	 
         	 mMainHandler.postDelayed(runnable, 1000);   
-        	 if(locationInfo.Latitude!=0){
-        	 
-	          	//临时代码绑定LIST数据
-	          	ArrayList<HashMap<String, String>> mylist = new ArrayList<HashMap<String, String>>();
-	          	PostSiteData httpRest = new PostSiteData();
-	          	String json = httpRest.GetCurrentLocationMessage(locationInfo, getApplicationContext());
-	           	try {
-	      			JSONObject jsonObjSplit= new JSONObject(json);
-	      			JSONArray ja =jsonObjSplit.getJSONArray("data");
-	      			for(int i =0 ;i<ja.length();i++){
-	      				JSONObject jo = (JSONObject)ja.get(i);
-	      	    		HashMap<String, String> map = new HashMap<String, String>();
-	      	    		map.put("ItemName", jo.getString("username"));
-	      	        	map.put("ItemMessage", jo.getString("note"));
-	      	        	mylist.add(map);
-	      			}
-	      	    	SimpleAdapter mSchedule = new SimpleAdapter(context,mylist,R.layout.list_local_message_item,new String[]{"ItemName","ItemMessage"},new int[]{R.id.ItemName,R.id.ItemMessage}		);
-	      	    	listLocal.setAdapter(mSchedule);
-	      			
-	      		} catch (JSONException e) {
-	      			// TODO Auto-generated catch block
-	      			e.printStackTrace();
-	      		}
-	          	//临时代码结束 
-        	}
+
           }  
     }; 
     
