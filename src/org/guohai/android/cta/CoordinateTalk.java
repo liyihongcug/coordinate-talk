@@ -35,6 +35,9 @@ import org.guohai.android.cta.model.ParseGpsInfo;
 import org.guohai.android.cta.model.ResultInfo;
 import org.guohai.android.location.*;
 import org.guohai.android.cta.utility.Tools;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Main views 
@@ -64,6 +67,7 @@ public class CoordinateTalk extends Activity {
     private static final int MENU_EXIT=3;  
     //接收子线程消息
     private Handler mMainHandler;
+    private Context context;
     
     /** 
      * Called when the activity is first created. 
@@ -75,6 +79,7 @@ public class CoordinateTalk extends Activity {
         findViews();
         bindEvent();       
         inita();          
+        context=this;
     }    
     
     /**
@@ -156,6 +161,7 @@ public class CoordinateTalk extends Activity {
 				a+= listNbInfo.get(i).getCid()+","+listNbInfo.get(i).getLac()+","+listNbInfo.get(i).getRssi()+"|";//取邻居小区号
 			}
 			Toast.makeText(CoordinateTalk.this, a, Toast.LENGTH_LONG).show();
+			
         }    	
     };    
     /** 定位按钮事件 */
@@ -251,23 +257,8 @@ public class CoordinateTalk extends Activity {
     
     /** 初始化 */
     private void inita(){    
-    	//临时代码绑定LIST数据
-    	ArrayList<HashMap<String, String>> mylist = new ArrayList<HashMap<String, String>>();
-    	for(int i=1;i<5;i++){
-    		HashMap<String, String> map = new HashMap<String, String>();
-    		map.put("ItemName", "我是小"+i);
-        	map.put("ItemMessage", "我来过这里"+(i+5)+"次了!");
-        	mylist.add(map);
-    	}
-    	SimpleAdapter mSchedule = new SimpleAdapter(this,
-    			mylist,
-    			R.layout.list_local_message_item,
-    			new String[]{"ItemName","ItemMessage"},
-    			new int[]{R.id.ItemName,R.id.ItemMessage}
-    			);
-    	listLocal.setAdapter(mSchedule);
-    	//临时代码结束 
-    	
+
+
     	locationInfo = new LocationInfo();    
     	GSMManager gsm = new GSMManager(getApplicationContext(),locationInfo);
     	GPSManager gps = new GPSManager(getApplicationContext(),locationInfo);    	    	
@@ -334,6 +325,31 @@ public class CoordinateTalk extends Activity {
         	 //Log.i(TAG,"Thread ChildThread run!");	         
 	         textCoordinate.setText("维度：" +  locationInfo.Latitude+ "\n经度：" + locationInfo.Longitude+"\n高度："+locationInfo.Altitude);        	        	 
         	 mMainHandler.postDelayed(runnable, 1000);   
+        	 if(locationInfo.Latitude!=0){
+        	 
+	          	//临时代码绑定LIST数据
+	          	ArrayList<HashMap<String, String>> mylist = new ArrayList<HashMap<String, String>>();
+	          	PostSiteData httpRest = new PostSiteData();
+	          	String json = httpRest.GetCurrentLocationMessage(locationInfo, getApplicationContext());
+	           	try {
+	      			JSONObject jsonObjSplit= new JSONObject(json);
+	      			JSONArray ja =jsonObjSplit.getJSONArray("data");
+	      			for(int i =0 ;i<ja.length();i++){
+	      				JSONObject jo = (JSONObject)ja.get(i);
+	      	    		HashMap<String, String> map = new HashMap<String, String>();
+	      	    		map.put("ItemName", jo.getString("username"));
+	      	        	map.put("ItemMessage", jo.getString("note"));
+	      	        	mylist.add(map);
+	      			}
+	      	    	SimpleAdapter mSchedule = new SimpleAdapter(context,mylist,R.layout.list_local_message_item,new String[]{"ItemName","ItemMessage"},new int[]{R.id.ItemName,R.id.ItemMessage}		);
+	      	    	listLocal.setAdapter(mSchedule);
+	      			
+	      		} catch (JSONException e) {
+	      			// TODO Auto-generated catch block
+	      			e.printStackTrace();
+	      		}
+	          	//临时代码结束 
+        	}
           }  
     }; 
     
