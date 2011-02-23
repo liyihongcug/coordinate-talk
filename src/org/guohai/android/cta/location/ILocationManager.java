@@ -1,4 +1,4 @@
-package org.guohai.android.location;
+package org.guohai.android.cta.location;
 
 public interface ILocationManager {
 	/** 检查设备是否开启 */

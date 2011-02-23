@@ -29,11 +29,11 @@ import android.view.*;
 
 import org.guohai.android.cta.bll.*;
 
+import org.guohai.android.cta.location.*;
 import org.guohai.android.cta.model.LocationInfo;
 import org.guohai.android.cta.model.MessageInfo;
 import org.guohai.android.cta.model.ParseGpsInfo;
 import org.guohai.android.cta.model.ResultInfo;
-import org.guohai.android.location.*;
 import org.guohai.android.cta.utility.Tools;
 import org.json.JSONArray;
 import org.json.JSONException;

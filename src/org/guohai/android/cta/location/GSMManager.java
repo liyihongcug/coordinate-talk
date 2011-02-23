@@ -1,4 +1,4 @@
-package org.guohai.android.location;
+package org.guohai.android.cta.location;
 
 import java.util.List;
 import java.util.Timer;
