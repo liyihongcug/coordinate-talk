@@ -2,33 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-    
-    <LinearLayout 
-	    android:orientation="horizontal"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" >
-	    <Button 
-	    	android:text="Camera"
-			android:id="@+id/button_camera"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
-		<ImageView
-		    android:id="@+id/imageCapture"
-		    android:src="@drawable/empty"
-	    	android:layout_width="320px"
-	    	android:layout_height="240px"
-	    	/>
+    android:layout_height="fill_parent" 
+    android:id="@+id/main"
+    android:padding="5px"
+    >
+    <LinearLayout
+    	android:orientation="horizontal"
+    	android:layout_height="wrap_content"
+    	android:layout_width="fill_parent"
+    	android:paddingBottom="5px"
+    	>
+    	<ImageView
+    		android:id="@+id/faceimg"
+    		android:src="@drawable/icon"
+    		android:layout_width="48px"
+	    	android:layout_height="48px"
+    		></ImageView>
+    	<TextView
+    		android:id="@+id/username"
+    		android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" 
+    		></TextView>
     </LinearLayout>
-	<EditText
+    <EditText
 		android:text=""
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
-		android:id="@+id/editText1"/> 
+		android:id="@+id/editText1"/>
+
+
+
+ 
 	<LinearLayout 
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
 	    android:layout_height="wrap_content" >
+	   	<Button 
+	    	android:text="Camera"
+			android:id="@+id/button_camera"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
 		<Button
 			android:text="提交"
 			android:id="@+id/button_refer"
@@ -65,4 +78,10 @@
 	android:layout_height="wrap_content"
 	android:id="@+id/listlocalMessage"
 	android:layout_width="fill_parent" />
+<ImageView
+		    android:id="@+id/imageCapture"
+		    android:src="@drawable/empty"
+	    	android:layout_width="320px"
+	    	android:layout_height="240px"
+	    	/>
 </LinearLayout>

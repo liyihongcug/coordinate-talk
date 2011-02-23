@@ -59,7 +59,7 @@ public class CoordinateTalk extends Activity {
     private static final int TAKE_PICTURE = 1;
     private LocationInfo locationInfo;
     private List<ILocationManager> LocationManagers;
-    
+    private LinearLayout layout;
     
     private static final int MENU_CONFIG=0;
     private static final int MENU_REGISTER_ACCOUNT=1;
@@ -75,12 +75,16 @@ public class CoordinateTalk extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {        
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
         findViews();
         bindEvent();       
         inita();          
         context=this;
+        Tools.AutoBackground(this, layout, R.drawable.background_h, R.drawable.background_w);
     }    
+    
+    
     
     /**
      *  Find all views
@@ -96,6 +100,7 @@ public class CoordinateTalk extends Activity {
     	
     	btnCamera = (Button) this.findViewById(R.id.button_camera);
     	imageCapture = (ImageView) findViewById(R.id.imageCapture);
+    	layout = (LinearLayout)findViewById(R.id.main);
     }
     
     
