@@ -340,7 +340,7 @@ public class CoordinateTalk extends Activity {
     @Override
     protected void onResume(){
     	super.onResume();
-    	openHandler(); 
+    	//openHandler(); 
     }
     
     /** 当程序暂停的时候 */
