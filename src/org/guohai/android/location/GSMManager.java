@@ -22,11 +22,12 @@ public class GSMManager  implements ILocationManager {
 	private LocationInfo info;	
 	private Timer timer;  
 	private long delay = 10;
-	private long period = 5000;
+	private long period = 60000;
 	private TelephonyManager tm;
 	
 	/** 构造函数 */
 	public GSMManager(Context parm,LocationInfo info){
+		Log.d(TAG, "GSMManager执行了");
 		context = parm;
 		this.setInfo(info);
 		timer = new Timer();
@@ -45,9 +46,18 @@ public class GSMManager  implements ILocationManager {
 	
 	@Override
 	public boolean IsOpen() {
-		if(tm != null && tm.getNetworkType() == 1)
+
+		if(tm != null)
 		{
-			return true;
+			int NetType =tm.getNetworkType();
+			Log.d(TAG,"当前网络类型是"+NetType);
+			if(NetType==TelephonyManager.NETWORK_TYPE_EDGE || 
+					NetType == TelephonyManager.NETWORK_TYPE_GPRS ){
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		return false;
 	}
@@ -56,7 +66,8 @@ public class GSMManager  implements ILocationManager {
 	public boolean StartLocation() {
 		if(IsOpen())
 		{
-			timer.schedule(task, delay, period);
+			//timer.schedule(task, delay, period);
+			CellularPhone();
 		}
 		return true;
 	}
@@ -89,7 +100,7 @@ public class GSMManager  implements ILocationManager {
 			gcli.NbCellId = listNbInfo.get(0).getCid();//取邻居小区号
 			gcli.NbLocationAreaCode = listNbInfo.get(0).getLac();//取邻居LAC
 		}
-		Log.i(TAG,"call_id="+gcli.CellId+",location_area_code="+gcli.LocationAreaCode+",mobile_country_code="+gcli.MobileCountryCode+",mobile_network_code="+gcli.MobileNetworkCode);
+		Log.i(TAG,"CellularPhone:call_id="+gcli.CellId+",location_area_code="+gcli.LocationAreaCode+",mobile_country_code="+gcli.MobileCountryCode+",mobile_network_code="+gcli.MobileNetworkCode);
 		
 	    PostSiteData httpRest = new PostSiteData();
 	    setInfo(httpRest.FromGSMGetLocation(gcli, context));
